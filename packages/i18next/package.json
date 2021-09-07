@@ -1,0 +1,17 @@
+{
+  "name": "@xc/i18next",
+  "version": "0.0.1",
+  "description": "> TODO: description",
+  "license": "MIT",
+  "main": "index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "prepublish": "tsc"
+  },
+  "devDependencies": {
+    "@types/react": "^17.0.20",
+    "i18next": "^20.6.0",
+    "react-i18next": "^11.11.4"
+  }
+}
