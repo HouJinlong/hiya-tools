@@ -2,6 +2,12 @@
 
 > 基于react-18nnext进行使用峰值
 
+
+
+[react-18nnext](https://react.i18next.com/)
+
+[i18next](https://www.i18next.com/)
+
 ## 使用
 1. 安装依赖
 ```
@@ -115,7 +121,7 @@ i18next.config.fallbackLng = 'en'
 i18next.config.debug = true
 ```
 2. `initXcI18next` 
-> 对`useTranslation` , `XcLanguageContainerHoc`, `Translation`进行包装，使得参数非必传，使用更方便
+> 对`useTranslation` , `XcLanguageContainerHoc`, `Translation`进行包装，固定语言包（命名空间）使得参数非必传，使用更方便
 
 ```
 export interface InitXcI18nextArgument<T extends XcNamespace>{
