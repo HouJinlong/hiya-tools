@@ -55,29 +55,28 @@ export const LanguageContainerHoc = (data:LanguageContainerProps) => <P extends 
     )
   }
 }
-// export interface GetResourcesArgument<
-//   N,
-//   K extends keyof N,
-//   T extends XcNamespace
-// > {
-//   defaultNS: T
-//   langs: N
-// }
-// type GetResourcesReturn<N, K extends keyof N, T extends XcNamespace> = {
-//   [key in K]: {[namespace in T]: N[Extract<K, WW>]}
-// }
-// export function getResources<N, T extends XcNamespace, K extends keyof N>(
-//   data: GetResourcesArgument<N, K, T>
-// ): GetResourcesReturn<N, K, T> {
-//   const ret = {}
-//   Object.keys(data.langs).forEach(v => {
-//     if (!ret[v]) {
-//       ret[v] = {}
-//     }
-//     ret[v][data.defaultNS] = data.langs[v]
-//   })
-//   return ret as any
-// }
+export interface GetResourcesArgument<O, T extends XcNamespace,N,K extends keyof N>{
+  typeLang:O
+  defaultNS: T
+  langs:{
+      [key in K]:O
+  }
+}
+export type GetResourcesReturn<O, T extends XcNamespace, N, K extends keyof N> = {
+  [key in K]: {
+      [namespace in T]:O
+  }
+}
+export function getResources<O,T extends XcNamespace,N, K extends keyof N>(data:GetResourcesArgument<O,T,N,K>):GetResourcesReturn<O,T,N,K>{
+  const ret = {}
+  Object.keys(data.langs).forEach(v => {
+      if (!ret[v]) {
+      ret[v] = {}
+      }
+      ret[v][data.defaultNS] = data.langs[v]
+  })
+  return ret as any
+}
 export interface InitXcI18nextArgument<T extends XcNamespace>{
   defaultNS: T,
   resources: InitOptions['resources'],
@@ -123,6 +122,6 @@ export default {
   LanguageContainerHoc,
   LanguageContainer,
   config,
-  // getResources,
+  getResources,
   initXcI18next
 }

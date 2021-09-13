@@ -3,6 +3,7 @@
 > 基于react-18nnext进行使用峰值
 
 
+[yalc](https://github.com/wclr/yalc)
 
 [react-18nnext](https://react.i18next.com/)
 
