@@ -7,7 +7,7 @@ export default function (){
     // 安装依赖
     console.log('开始初始化...');
     console.log(appDirectory);
-    spawn.sync('yarn', ['add','@xc/i18next','--cwd', appDirectory], { stdio: 'inherit' });
+    spawn.sync('yarn', ['add','@xc/i18next',"react-i18next","i18next",'--cwd', appDirectory], { stdio: 'inherit' });
     console.log(chalk.bold.green(`依赖安装成功`));
     // 添加类型文件
     fs.writeFileSync(PathConfig.shims.output,fs.readFileSync(PathConfig.shims.input,'utf-8'))

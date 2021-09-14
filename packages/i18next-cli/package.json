@@ -1,14 +1,14 @@
 {
   "name": "@xc/i18next-cli",
   "version": "0.1.0",
-  "description": "> TODO: description",
+  "description": "i18next的使用辅助工具",
   "license": "MIT",
-  "main": "index.js",
   "bin": {
     "xci18n": "./dist/index.js"
   },
   "scripts": {
-    "run": "ts-node ./dist/src/index.js"
+    "build": "tsc",
+    "prepublish": "tsc && cp README.md ./dist"
   },
   "dependencies": {
     "@babel/core": "^7.15.5",

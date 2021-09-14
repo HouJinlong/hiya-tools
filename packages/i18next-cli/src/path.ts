@@ -25,7 +25,7 @@ export const PathConfig = {
     "tsconfig":{
         'input':resolveApp('./tsconfig.json'),
         'output':resolveApp('./tsconfig.json'),
-    }
+    },
     "xci18nextConfig":{
         'input':resolveApp('./xci18next.json'),
     }
