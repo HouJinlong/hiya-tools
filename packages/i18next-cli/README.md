@@ -7,7 +7,20 @@
 ```
 yarn global add @xc/i18next-cli 
 
-xci18n -v
+ xci18n --help  
+
+Usage: @xc/i18next-cli [options] [command]
+
+Options:
+  -v, --version                    output the version number
+  -h, --help                       display help for command
+
+Commands:
+  init                             初始化@xc/i18next
+  create <source> <name>           根据数据源创建语言包
+  update <source> <langFileIndex>  根据数据源创建语言包
+  xlsx <source>                    根据语言包生成xlsx文件
+  help [command]                   display help for command
 ```
 ## 使用
 
@@ -68,3 +81,48 @@ Options:
 xci18n create ./水果机.xlsx  水果机
 ```
 ![https://cdn.jsdelivr.net/gh/HouJinlong/pic@master/2021-09-13/20210913211611.png](https://cdn.jsdelivr.net/gh/HouJinlong/pic@master/2021-09-13/20210913211611.png)
+
+1. `shims.i18next.d.ts` 导入声明
+2. 生成语言包文件
+   ![https://cdn.jsdelivr.net/gh/HouJinlong/pic@master/2021-09-14/20210914101036.png](https://cdn.jsdelivr.net/gh/HouJinlong/pic@master/2021-09-14/20210914101036.png)
+
+
+### 3. 语言包转xlsx
+
+```
+Usage: @xc/i18next-cli xlsx [options] <source>
+
+根据语言包生成xlsx文件
+
+Arguments:
+  source      语言包index.ts的路径
+
+Options:
+  -h, --help  display help for command
+```
+
+> 例如
+
+```
+xci18n xlsx ./i18n/index.ts
+```
+
+![https://cdn.jsdelivr.net/gh/HouJinlong/pic@master/2021-09-14/20210914101415.png](https://cdn.jsdelivr.net/gh/HouJinlong/pic@master/2021-09-14/20210914101415.png)
+
+### 4. xlsx更新已有语言包
+
+```
+Usage: @xc/i18next-cli update [options] <source> <langFileIndex>
+
+根据数据源创建语言包
+
+Arguments:
+  source         来源(暂时只支持xlsx文件)
+  langFileIndex  语言包index.ts的路径
+
+Options:
+  -h, --help     display help for command
+
+```
+
+![https://cdn.jsdelivr.net/gh/HouJinlong/pic@master/2021-09-14/20210914101655.png](https://cdn.jsdelivr.net/gh/HouJinlong/pic@master/2021-09-14/20210914101655.png)

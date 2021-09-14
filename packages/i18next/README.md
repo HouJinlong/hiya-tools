@@ -1,6 +1,6 @@
 # `i18next`
 
-> 基于react-18nnext进行使用峰值
+> 基于react-18nnext进行使用包装
 
 
 [yalc](https://github.com/wclr/yalc)
@@ -10,84 +10,21 @@
 [i18next](https://www.i18next.com/)
 
 ## 使用
-1. 安装依赖
-```
-yarn add @xc/i18next react-i18next i18next  
-```
-2. 增加ts提示文件（可脚本化，例如@xc/i18next-cli init）
 
-```
-// shims.i18next.d.ts
+### 1. 前置准备
 
-import 'react-i18next'
-import 猜宝箱 from './src/pages/404/i18n/index'
+使用 @xc/i18next-cli 初始化并生成语言包
 
-const data = {
-  ...猜宝箱.resources.en,
-}
 
-declare module 'react-i18next' {
-  interface CustomTypeOptions {
-    returnNull: false
-    returnEmptyString: false
-    resources: typeof data
-  }
-}
-```
-3. 添加语言包（可脚本化 @xc/i18next-cli create "猜宝箱"）
-   
-![](https://cdn.jsdelivr.net/gh/HouJinlong/pic@master/2021-09-07/20210907105630.png)
+### 2.使用语言包
 
-```
-// ar.json
-{
-    "标题":"标题ar"
-}
-// en.json
-{
-    "标题":"标题en"
-}
-```
-```
-// index.ts 
-/* eslint-disable no-bitwise */
-// import React from 'react'
-import {initXcI18next, InitXcI18nextReturn} from '@xc/i18next'
-import en from './en.json'
-import ar from './ar.json'
-
-export const defaultNS = '猜宝箱' as const
-export const resources: {
-  [key in 'en' | 'ar']: {[key in typeof defaultNS]: typeof en}
-} = {
-  en: {
-    [defaultNS]: en,
-  },
-  ar: {
-    [defaultNS]: ar,
-  },
-}
-
-export const XcI18next: InitXcI18nextReturn<typeof defaultNS> = initXcI18next({
-  defaultNS,
-  resources,
-})
-
-export default {
-  defaultNS,
-  resources,
-  XcI18next,
-}
-
-```
-4. 使用从语言包中导入
 
 ```
 import {XcI18next} from './i18n'
 const {useXcTranslation, XcLanguageContainerHoc, XcTranslation} = XcI18next
 
 const Index = props => {
-  const {t, i18n} = useXcTranslation()
+  const {t, i18n,getImg} = useXcTranslation()
   return (
     <div >
       {t('标题')}
@@ -96,6 +33,10 @@ const Index = props => {
           return <p>{tfn('标题')}</p>
         }}
       </XcTranslation>
+      <img
+        src={getImg(require.context('./images/banner', false))}
+        alt=""
+      />
     </div>
   )
 }
@@ -103,44 +44,54 @@ const Index = props => {
 export default XcLanguageContainerHoc()(Index)
 
 ```
-
 ## 参数说明
 
 1. 全局配置
 
 ```
 import i18next from '@xc/i18next'
+
 const useLanguage = () => {
   const [lang, setLang] = useState('en')
   return [lang, str => setLang(str)]
 }
-// 语言初始化，与修改方法
-i18next.config.useLanguage = useLanguage
-// 默认语言
-i18next.config.fallbackLng = 'en'
-// i18next调试
-i18next.config.debug = true
+// 语言初始化与修改方法的hook
+XcI18next.config.useLanguage = useLanguage
+
+// https://www.i18next.com/overview/configuration-options
+XcI18next.config.initOptions.debug = true
+XcI18next.config.initOptions.fallbackLng = "en"
+XcI18next.config.initOptions.interpolation={
+  prefix:"${",
+  suffix:"}"
+}
 ```
 2. `initXcI18next` 
 > 对`useTranslation` , `XcLanguageContainerHoc`, `Translation`进行包装，固定语言包（命名空间）使得参数非必传，使用更方便
 
 ```
-export interface InitXcI18nextArgument<T extends XcNamespace>{
-  defaultNS: T,                         // 语言包（命名空间）
-  resources: InitOptions['resources'],  // 语言json
-  InitOptions?:InitOptions              // i18next.init 参数
-}
 
+export interface InitXcI18nextArgument<T extends XcNamespace>{
+  defaultNS: T,
+  resources: InitOptions['resources'],
+  initOptions?:InitOptions
+}
+interface UseXcTranslationReturn<T extends XcNamespace>{
+  t: TFunction<T>;
+  i18n: i18n;
+  ready: boolean;
+  getImg:(getImgs: __WebpackModuleApi.RequireContext)=>any;
+}
 export interface InitXcI18nextReturn<T extends XcNamespace>{
-  // 包装过的 `useTranslation`   
+  // 包装过的 `useTranslation` 并增加了getImg获取多语言图片的方法
   useXcTranslation: {
-    (options?: UseTranslationOptions): UseTranslationResponse<T>
+    (options?: UseTranslationOptions): [UseXcTranslationReturn<T>['t'], UseXcTranslationReturn<T>['i18n'], UseXcTranslationReturn<T>['ready'],UseXcTranslationReturn<T>['getImg']] & UseXcTranslationReturn<T>;
   }
   // 包装过的 `XcLanguageContainerHoc`
   XcLanguageContainerHoc:{
     (props?:{
       useLanguage?:Config['useLanguage']
-      InitOptions?:InitOptions
+      initOptions?:InitOptions
     }):ReturnType<typeof LanguageContainerHoc>
   }
   // 包装过的 `Translation`   
@@ -150,15 +101,14 @@ export interface InitXcI18nextReturn<T extends XcNamespace>{
 }
 ```
 
-
 3. `XcLanguageContainerHoc` 
 > 通过使用`I18nextProvider` 与`i18next.createInstance`生成在当前基于一个语言包的独立`i18n`,使得每个页面或每个组件都可以独立配置多语言
 
 ```
 export interface LanguageContainerProps{
-  useLanguage?:Config['useLanguage'];   // 可选，不写默认使用全局配置
-  defaultNS:any;                        // 使用语言包（命名空间）
-  resources:InitOptions['resources'];   // 语言json
-  InitOptions?:InitOptions              //  i18next.init 参数
+  useLanguage?:Config['useLanguage'];
+  defaultNS:XcNamespace;
+  resources:InitOptions['resources'];
+  initOptions?:InitOptions
 }
 ```

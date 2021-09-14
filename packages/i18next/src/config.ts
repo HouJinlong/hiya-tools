@@ -1,9 +1,8 @@
 import {useState} from 'react'
 import {InitOptions} from 'i18next'
-export interface Config{
-    fallbackLng:InitOptions['fallbackLng'],
+export interface Config {
     useLanguage:()=>[string,(lang:string)=>void]
-    debug:InitOptions['debug']
+    initOptions:InitOptions
 }
 const fallbackLng = 'en'
 const useLanguage: Config['useLanguage'] = () => {
@@ -11,7 +10,9 @@ const useLanguage: Config['useLanguage'] = () => {
     return [lang, (str: string) => setLang(str)]
 }
 export const config:Config = {
-    fallbackLng,
     useLanguage,
-    debug:false
+    initOptions:{
+        fallbackLng,
+        debug:false
+    }
 }
