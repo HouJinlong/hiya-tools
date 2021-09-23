@@ -4,8 +4,6 @@ import hoistStatics from 'hoist-non-react-statics'
 import {
   useTranslation,
   UseTranslationOptions,
-  Namespace,
-  DefaultNamespace,
   Fallback,
   TFunction,
   I18nextProvider,

@@ -12,6 +12,7 @@
   "dependencies": {
     "@types/react": "^17.0.20",
     "@types/webpack-env": "^1.16.2",
+    "hoist-non-react-statics": "^3.3.2",
     "i18next": "^20.6.0",
     "react-i18next": "^11.11.4"
   }

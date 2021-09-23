@@ -1,5 +1,7 @@
 # `i18next`
 
+ts4.1以上，我用的是 Version 4.4.3
+
 > 基于react-18nnext进行使用包装
 
 
