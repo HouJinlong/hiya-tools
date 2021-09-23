@@ -1,5 +1,6 @@
 import React,{useMemo} from 'react'
 import i18next, {InitOptions,i18n} from 'i18next'
+import hoistStatics from 'hoist-non-react-statics'
 import {
   useTranslation,
   UseTranslationOptions,
@@ -46,13 +47,17 @@ export const LanguageContainer: React.FC<LanguageContainerProps> = ({useLanguage
 export const LanguageContainerHoc = (data:LanguageContainerProps) => <P extends {}>(
   WrapComponent: React.ComponentType<P>
 ) => {
-  return (props: P): JSX.Element => {
+  const C = (props: P): JSX.Element => {
     return (
       <LanguageContainer {...data}>
         <WrapComponent {...props} />
       </LanguageContainer>
     )
   }
+  return hoistStatics(
+    C,
+    WrapComponent
+  )
 }
 export interface GetResourcesArgument<O, T extends XcNamespace,N,K extends keyof N>{
   typeLang:O
