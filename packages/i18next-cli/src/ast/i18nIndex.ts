@@ -5,7 +5,7 @@ import generate from "@babel/generator";
 import template from "@babel/template";
 import * as t from "@babel/types";
 import fs from "fs";
-import {PathConfig} from '../path'
+import {PathConfig} from '../utils'
 
 class i18nIndex {
   constructor(){

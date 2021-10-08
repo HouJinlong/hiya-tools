@@ -1,6 +1,6 @@
 
 import fs from 'fs'
-import { resolveCurrentDir,config } from '../path';
+import { resolveCurrentDir,config } from '../utils';
 import i18nIndex from '../ast/i18nIndex';
 import path from 'path';
 import xlsx from 'xlsx'

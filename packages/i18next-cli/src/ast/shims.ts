@@ -3,7 +3,7 @@ import traverse from "@babel/traverse";
 import { transformFromAstSync } from "@babel/core";
 import * as t from "@babel/types";
 import fs from "fs";
-import {PathConfig} from '../path'
+import {PathConfig} from '../utils'
 
 class ShimsAst {
   filePath = PathConfig.shims.output

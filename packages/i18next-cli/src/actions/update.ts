@@ -2,7 +2,7 @@ import chalk from 'chalk';
 import fs from 'fs';
 import { json } from 'stream/consumers';
 import xlsx from 'xlsx'
-import {resolveCurrentDir,dirName,PathConfig,relativeApp,config} from '../path'
+import {resolveCurrentDir,dirName,PathConfig,relativeApp,config,createLangFile} from '../utils'
 import i18nIndexAst from '../ast/i18nIndex';
 import shimsAst from '../ast/shims';
 export default function (source:string,langFileIndex:string){
@@ -35,23 +35,3 @@ export default function (source:string,langFileIndex:string){
     }
 } 
 
-function createLangFile(data,lang){
-    const langXlsxKey = config.xlsxKeyMap[lang]
-    if(!data[0][langXlsxKey]){
-        console.log(chalk.bold.yellow(`该xlxs缺少 ${langXlsxKey}`));
-        return
-    }
-    let fileData = {}
-    data.forEach(v => {
-        if(!fileData[v[config.key]]){
-            if(v[langXlsxKey]){
-                fileData[v[config.key]]=v[langXlsxKey]
-            }else{
-                console.log(chalk.bold.yellow(`${v[config.key]} 缺少 ${langXlsxKey}`));
-            }
-        }
-    });
-    fs.writeFileSync(resolveCurrentDir(`${dirName}/${lang}.json`),JSON.stringify(fileData,null,2))
-    console.log(chalk.bold.green(`./${dirName}/${lang}.json   生成`));
-    return fileData
-}
