@@ -1,6 +1,6 @@
 {
   "name": "@xc/i18next",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "基于react-18nnext进行使用包装",
   "license": "MIT",
   "main": "index.js",
