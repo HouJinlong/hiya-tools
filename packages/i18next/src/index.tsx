@@ -9,7 +9,10 @@ import {
   I18nextProvider,
   initReactI18next,
   TranslationProps,
-  Translation
+  Translation,
+  TFuncKey,
+  TransProps,
+  Trans,
 } from 'react-i18next'
 import {config,Config} from './config'
 import './i18next'
@@ -91,6 +94,8 @@ interface UseXcTranslationReturn<T extends XcNamespace>{
   ready: boolean;
   getImg:(getImgs: __WebpackModuleApi.RequireContext)=>any;
 }
+
+
 export interface InitXcI18nextReturn<T extends XcNamespace>{
   useXcTranslation: {
     (options?: UseTranslationOptions): [UseXcTranslationReturn<T>['t'], UseXcTranslationReturn<T>['i18n'], UseXcTranslationReturn<T>['ready'],UseXcTranslationReturn<T>['getImg']] & UseXcTranslationReturn<T>;
@@ -103,6 +108,9 @@ export interface InitXcI18nextReturn<T extends XcNamespace>{
   }
   XcTranslation:{
     (props:Omit<TranslationProps<T>, "ns">):any
+  },
+  XcTrans:{
+    (props:Omit<TransProps<TFuncKey<T> extends infer A ? A : never,T>, "ns">):any
   }
 }
 export function initXcI18next<T extends XcNamespace>(data:InitXcI18nextArgument<T>): InitXcI18nextReturn<T> {
@@ -133,10 +141,12 @@ export function initXcI18next<T extends XcNamespace>(data:InitXcI18nextArgument<
       })
   }
   const XcTranslation:InitXcI18nextReturn<T>['XcTranslation'] = (props)=><Translation {...props} ns={data.defaultNS}/>
+  const XcTrans:InitXcI18nextReturn<T>['XcTrans'] = (props)=> <Trans {...props} ns={data.defaultNS}/> 
   return {
     useXcTranslation,
     XcTranslation,
     XcLanguageContainerHoc,
+    XcTrans
   }
 }
 
