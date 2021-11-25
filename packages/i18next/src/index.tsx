@@ -22,9 +22,10 @@ export interface LanguageContainerProps{
   defaultNS:XcNamespace;
   resources:InitOptions['resources'];
   initOptions?:InitOptions
+  children:(I18n:i18n)=>any
 }
 
-export const LanguageContainer: React.FC<LanguageContainerProps> = ({useLanguage, resources, defaultNS,initOptions, ...other}) => {
+export const LanguageContainer: React.FC<LanguageContainerProps> = ({useLanguage, resources, defaultNS,initOptions,children}) => {
   const [lng, setLng] = (useLanguage||config.useLanguage)()
   const i18n = useMemo(
     () => {
@@ -42,16 +43,16 @@ export const LanguageContainer: React.FC<LanguageContainerProps> = ({useLanguage
     [lng]
   )
 
-  return <I18nextProvider i18n={i18n}>{other.children}</I18nextProvider>
+  return <I18nextProvider i18n={i18n}>{children(i18n)}</I18nextProvider>
 }
 
-export const LanguageContainerHoc = (data:LanguageContainerProps) => <P extends {}>(
+export const LanguageContainerHoc = (data:Omit<LanguageContainerProps,'children'>) => <P extends {}>(
   WrapComponent: React.ComponentType<P>
 ) => {
   const C = (props: P): JSX.Element => {
     return (
       <LanguageContainer {...data}>
-        <WrapComponent {...props} />
+        {(i18n)=><WrapComponent {...props} i18n={i18n}/>}
       </LanguageContainer>
     )
   }
