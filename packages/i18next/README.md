@@ -69,7 +69,7 @@ XcI18next.config.initOptions.interpolation={
 }
 ```
 2. `initXcI18next` 
-> 对`useTranslation` , `XcLanguageContainerHoc`, `Translation`进行包装，固定语言包（命名空间）使得参数非必传，使用更方便
+> 对`XcTrans`, `useTranslation` , `XcLanguageContainerHoc`, `Translation`进行包装，固定语言包（命名空间）使得参数非必传，使用更方便
 
 ```
 
@@ -84,6 +84,8 @@ interface UseXcTranslationReturn<T extends XcNamespace>{
   ready: boolean;
   getImg:(getImgs: __WebpackModuleApi.RequireContext)=>any;
 }
+
+
 export interface InitXcI18nextReturn<T extends XcNamespace>{
   // 包装过的 `useTranslation` 并增加了getImg获取多语言图片的方法
   useXcTranslation: {
@@ -99,6 +101,10 @@ export interface InitXcI18nextReturn<T extends XcNamespace>{
   // 包装过的 `Translation`   
   XcTranslation:{
     (props:Omit<TranslationProps<T>, "ns">):any
+  }
+  // 包装过的 `XcTrans`   
+  XcTrans:{
+    <K extends TFuncKey<T> extends infer A ? A : never>(props:Omit<TransProps<K,T>, "ns">):any
   }
 }
 ```
