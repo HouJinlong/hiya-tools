@@ -17,10 +17,14 @@
     "@babel/template": "^7.15.4",
     "@babel/traverse": "^7.15.4",
     "@babel/types": "^7.15.4",
+    "axios": "^0.24.0",
     "chalk": "^4.1.2",
     "commander": "^8.1.0",
     "cross-spawn": "^7.0.3",
-    "pkg-dir": "^5.0.0",
+    "findup-sync": "^5.0.0",
+    "inquirer": "^8.2.0",
+    "papaparse": "^5.3.1",
+    "tabletop": "^1.6.3",
     "xlsx": "^0.17.1"
   },
   "devDependencies": {

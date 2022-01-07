@@ -111,7 +111,7 @@ export interface InitXcI18nextReturn<T extends XcNamespace>{
     (props:Omit<TranslationProps<T>, "ns">):any
   },
   XcTrans:{
-    (props:Omit<TransProps<TFuncKey<T> extends infer A ? A : never,T>, "ns">):any
+    <K extends TFuncKey<T> extends infer A ? A : never>(props:Omit<TransProps<K,T>, "ns">):any
   }
 }
 export function initXcI18next<T extends XcNamespace>(data:InitXcI18nextArgument<T>): InitXcI18nextReturn<T> {

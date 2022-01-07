@@ -1,41 +1,79 @@
 import chalk from 'chalk';
 import fs from 'fs';
 import { json } from 'stream/consumers';
-import xlsx from 'xlsx'
-import {resolveCurrentDir,dirName,PathConfig,relativeApp,config,createLangFile} from '../utils'
-import i18nIndexAst from '../ast/i18nIndex';
+import { config } from '../config';
+import {createLang} from '../utils'
 import shimsAst from '../ast/shims';
-export default function (source:string,name:string){
-    if(/xlsx$/.test(source)){
-        const AllNamespac = shimsAst.getAllNamespace()
-        if(AllNamespac.includes(name)){
-            return console.log(chalk.bold.red(`${name} 已存在请换一个名称`));
-        }
-        // 读取
-        const file = fs.readFileSync(resolveCurrentDir(source))
-        console.log(chalk.bold.green('文件读取成功正在生成语言包...'));
-        var wb = xlsx.read(file, {type:'buffer'});
-        const xlsxData = xlsx.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]])
-        // 生成json
-        try {
-            fs.accessSync(resolveCurrentDir(dirName))
-        } catch (error) {
-            fs.mkdirSync(resolveCurrentDir(dirName))
-        }
-        let langs = []
-        Object.keys(config.xlsxKeyMap).forEach(v=>{
-            if(createLangFile(xlsxData,v)){
-                langs.push(v)
+import inquirer from 'inquirer';
+export default function (){
+    const AllNamespac = shimsAst.getAllNamespace()
+    const questions = [
+    {
+        type: 'input',
+        name: 'name',
+        message: "唯一的语言包名称",
+        validate(value) {
+            if(AllNamespac.includes(value)){
+                return `${value} 已存在请换一个名称`;
+            }else{
+                if(value){
+                    return true
+                }else{
+                    return `不能为空`
+                }
+            }
+        },
+    },
+    {
+        type: 'input',
+        name: 'url',
+        message: "谷歌文档的共享地址",
+        validate(value) {
+            if(value){
+                return true
+            }else{
+                return `不能为空`
+            }
+        },
+    },
+    {
+        type: 'input',
+        name: 'data',
+        message: "谷歌文档的发布地址",
+        validate(value) {
+            if(value){
+                return true
+            }else{
+                return `不能为空`
+            }
+        },
+    },
+    {
+        type: 'list',
+        name: 'fallbackLng',
+        message: '请选择默认语言?',
+        choices: Object.keys(config.xlsxKeyMap),
+      },
+   ];
+    
+    inquirer.prompt(questions).then((answers) => {
+        console.log('正在读取数据...');
+        createLang({
+            dataUrl:answers.data,
+            data:{
+                defaultNS:answers.name,
+                configStr:`
+                const config = {
+                    url: '${answers.url}',
+                    data: '${answers.data}',
+                    typeLang:${answers.fallbackLng},
+                    initOptions: {
+                      fallbackLng: '${answers.fallbackLng}',
+                    },
+                  }
+                `,
+
             }
         })
-        console.log(langs);
-        // 生成入口文件
-        fs.writeFileSync(PathConfig.i18nIndex.output,i18nIndexAst.getSourceCode(langs,name))
-        console.log(chalk.bold.green(`./${dirName}/index.ts   已生成`));
-        // 类型添加
-        shimsAst.addNamespace(name,relativeApp(resolveCurrentDir(`${dirName}/index`)))
-        console.log(chalk.bold.green(`已在 shims.i18next.d.ts 中添加类型提示`));
-    }else{
-        console.log(chalk.bold.red('source 暂时只支持xlsx文件'));
-    }
+    });
 } 

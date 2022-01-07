@@ -1,6 +1,7 @@
 
 import fs from 'fs'
-import { resolveCurrentDir,config } from '../utils';
+import { resolveCurrentDir,config } from '../config';
+import chalk from 'chalk';
 import i18nIndex from '../ast/i18nIndex';
 import path from 'path';
 import xlsx from 'xlsx'
@@ -36,4 +37,5 @@ export default function(source:string){
     })
     xlsx.utils.book_append_sheet(wb, ws, 'SheetJS')
     xlsx.writeFile(wb, data.defaultNS+'.xlsx')
+    console.log(chalk.bold.green('xlsx文件已生成'),`./${data.defaultNS+'.xlsx'}`);
 } 

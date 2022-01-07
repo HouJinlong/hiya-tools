@@ -1,6 +1,6 @@
 
 import fs from 'fs'
-import {PathConfig,appDirectory,shimsName} from '../utils'
+import {PathConfig,appDirectory,shimsName} from '../config'
 import spawn from 'cross-spawn'
 import chalk from 'chalk';
 export default function (){

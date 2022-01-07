@@ -1,39 +1,70 @@
-import pkgDir from 'pkg-dir'
+
+import fs from 'fs'
 import chalk from 'chalk';
-import path from 'path'
-import fs,{PathOrFileDescriptor} from 'fs'
-export const currentDir = process.cwd()
-export const appDirectory = pkgDir.sync(process.cwd())
-export const cliAppDirectory = pkgDir.sync(__dirname)
+import Papa from 'papaparse';
+import axios from 'axios';
+import i18nIndexAst from './ast/i18nIndex';
+import shimsAst from './ast/shims';
+import { config,dirName,resolveCurrentDir,relativeApp,PathConfig} from './config';
 
-export const resolveCurrentDir = (relativePath:string) => path.resolve(currentDir, relativePath)
-export const resolveApp = (relativePath:string) => path.resolve(appDirectory, relativePath)
-export const relativeApp = (relativePath:string) => `./${path.relative(appDirectory, relativePath)}`
-export const resolveCliApp = (relativePath:string) => path.resolve(__dirname, '..', relativePath)
-
-
-export const shimsName = 'shims.i18next.d.ts'
-
-export const dirName = 'i18n'
-export const PathConfig = {
-    'shims':{
-        'input':resolveCliApp(`./template/${shimsName}`),
-        'output':resolveApp(`./${shimsName}`)
-    },
-    'i18nIndex':{
-        'output':resolveCurrentDir(`${dirName}/index.ts`)
-    },
-    "tsconfig":{
-        'input':resolveApp('./tsconfig.json'),
-        'output':resolveApp('./tsconfig.json'),
-    },
-    "xci18nextConfig":{
-        'input':resolveApp('./xci18next.json'),
+interface CreateLangArgument{
+    // 谷歌文档svg地址
+    dataUrl:string
+    data:{
+        // 语言包名称
+        defaultNS:string
+        // config 声明代码
+        configStr:string
+        // 创建没有 更新有
+        config?:{
+            url:string,
+            data:string
+        }
     }
 }
-
-export const config = require(PathConfig.xci18nextConfig.input);
-
+export function createLang({dataUrl,data}:CreateLangArgument){
+    dataUrl = dataUrl.replace('pubhtml','pub?output=csv')
+    axios.get(dataUrl).then(res=>{
+        Papa.parse(res.data, {
+            header: true,
+            complete: (results)=>{
+                const xlsxData = results.data
+                if(xlsxData[0][config.key]){
+                    console.log(chalk.bold.green('读取成功'));
+                    console.log('正在生成语言包...');
+                    // 生成json
+                    try {
+                        fs.accessSync(resolveCurrentDir(dirName))
+                    } catch (error) {
+                        fs.mkdirSync(resolveCurrentDir(dirName))
+                    }
+                    let langs = []
+                    Object.keys(config.xlsxKeyMap).forEach(v=>{
+                        if(createLangFile(xlsxData,v)){
+                            langs.push(v)
+                        }
+                    })
+                    fs.writeFileSync(PathConfig.i18nIndex.output,i18nIndexAst.getSourceCode(langs,{
+                        ...data,
+                        langs,
+                    }))
+                    // 生成入口文件
+                    console.log(chalk.bold.green(`./${dirName}/index.ts   已生成`));
+                    if(!data.config){
+                        // 类型添加
+                        shimsAst.addNamespace(data.defaultNS,relativeApp(resolveCurrentDir(`${dirName}/index`)))
+                        console.log(chalk.bold.green(`已在 shims.i18next.d.ts 中添加类型提示`));
+                    }
+                }else{
+                    console.log(chalk.bold.red('读取数据有问题，请校验该地址下载的 csv 文件:'),dataUrl);
+                }
+            }
+        })
+    }).catch(error=>{
+        console.warn(error);
+        console.log(chalk.bold.red('读取失败请确保该地址可正常访问且下载 csv 文件:'),dataUrl);
+    })
+}
 export function createLangFile(data,lang){
     const langXlsxKey = config.xlsxKeyMap[lang]
     if(!data[0][langXlsxKey]){

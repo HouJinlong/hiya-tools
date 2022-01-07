@@ -2,7 +2,7 @@
 import fs from 'fs'
 import path from 'path'
 import {Command} from 'commander'
-import {resolveCliApp} from './utils'
+import {resolveCliApp} from './config'
 import init from './actions/init'
 import create from './actions/create'
 import xlsx from './actions/xlsx'
@@ -18,15 +18,12 @@ program
     .action(init);
 program
     .command('create')
-    .description('根据数据源创建语言包')
-    .argument('<source>', '来源(暂时只支持xlsx文件)')
-    .argument('<name>', '语言包的名称,最好全中文')
+    .description('根据配置创建语言包')
     .action(create);   
 
 program
     .command('update')
-    .description('根据数据源创建语言包')
-    .argument('<source>', '来源(暂时只支持xlsx文件)')
+    .description('更新指定语言包')
     .argument('<langFileIndex>', '语言包index.ts的路径')
     .action(update); 
 

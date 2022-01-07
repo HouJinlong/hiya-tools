@@ -5,11 +5,11 @@ ts4.1以上，我用的是 Version 4.4.3
 > 基于react-18nnext进行使用包装
 
 
-[yalc](https://github.com/wclr/yalc)
+[yalc](https://github.com/wclr/yalc) 
 
-[react-18nnext](https://react.i18next.com/)
+[react-18nnext](https://react.i18next.com/)  11.12.0
 
-[i18next](https://www.i18next.com/)
+[i18next](https://www.i18next.com/) 21.3.2
 
 ## 使用
 
