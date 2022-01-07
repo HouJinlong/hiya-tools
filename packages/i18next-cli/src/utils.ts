@@ -22,6 +22,7 @@ interface CreateLangArgument{
         }
     }
 }
+
 export function createLang({dataUrl,data}:CreateLangArgument){
     dataUrl = dataUrl.replace('pubhtml','pub?output=csv')
     axios.get(dataUrl).then(res=>{
@@ -68,14 +69,16 @@ export function createLang({dataUrl,data}:CreateLangArgument){
 export function createLangFile(data,lang){
     const langXlsxKey = config.xlsxKeyMap[lang]
     if(!data[0][langXlsxKey]){
+        console.log(data[0][langXlsxKey]);
         console.log(chalk.bold.yellow(`该xlxs缺少 ${langXlsxKey}`));
         return
     }
     let fileData = {}
     data.forEach(v => {
         if(!fileData[v[config.key]]){
-            if(v[langXlsxKey]){
-                fileData[v[config.key]]=String(v[langXlsxKey])
+            const value = String(v[langXlsxKey])
+            if(value){
+                fileData[v[config.key]]= config.placeholder===value?'':value
             }else{
                 console.log(chalk.bold.yellow(`${v[config.key]} 缺少 ${langXlsxKey}`));
             }

@@ -52,12 +52,14 @@ xci18n init
     "ms": "马来语",
     "hk": "繁体中文",
     "hi": "印地语"
-  }
+  },
+  "placeholder":"占位"
 }
 ```
 
 1. key xlsx文件作为key那列的header
-2. xlsx文件语言列header与代码中语言的对应关系
+2. xlsxKeyMap 文件语言列header与代码中语言的对应关系
+3. placeholder 改语言翻译为空想使用默认语言的占位符(默认文案不要使用占位符)
 
 > xlsx例子
 
