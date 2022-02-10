@@ -120,6 +120,9 @@ ImageInput.args = {
     uiSchema: {
       ImageInput: {
         'ui:widget': 'ImageInput',
+        UploadProps:{
+          customRequest:(props)=>(obj) => console.log('obj: ', obj,props),
+        }
       },
       CssImageInput: {
         'ui:widget': 'CssImageInput',

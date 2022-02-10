@@ -1,11 +1,17 @@
 import React from 'react';
-import { Input } from 'antd';
+import { Input,Upload} from 'antd';
 import * as Style from './style';
 import {WidgetProps} from '@rjsf/core';
+import { IconWidget } from '../../../IconWidget';
 export const ImageInput: React.FC<WidgetProps> = (props) => {
+  let {customRequest,...otherUploadProps} = props.uiSchema.UploadProps || props.formContext.UploadProps ||{}
+  if(customRequest){
+    otherUploadProps['customRequest'] = customRequest(props)
+  }
   return (
     <Style.Box>
       <Input
+        addonBefore={<Upload accept="image/*" showUploadList={false} {...otherUploadProps} ><IconWidget icon="CloudUpload"  title='点击上传' /></Upload>} 
         value={props.value}
         onChange={(e) => {
           props.onChange?.(e.target.value);

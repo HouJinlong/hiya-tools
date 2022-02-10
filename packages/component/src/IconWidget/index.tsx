@@ -12,6 +12,9 @@ export const  IconWidget = (props:Props)=>{
     return (
         <Tooltip title={props.title} placement={props.placement}>
             <svg
+                style={{
+                    verticalAlign: 'middle'
+                }}
                 viewBox="0 0 1024 1024"
                 height={size}
                 width={size}
