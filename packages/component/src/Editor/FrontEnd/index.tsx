@@ -2,13 +2,12 @@ import React, { useCallback, useContext, useEffect ,useState,useRef} from 'react
 import {
   useMessageRef,
   BackEndMessageTypeEnum,
-  EditorContext,
-  EditDataType,
-  transformLayout
+  EditorContext
 } from '../EditorContext';
 import { icons } from '../icons';
+import { transformLayout,renderFn,prefix } from '../tool';
 import * as Style from './style';
-const prefix = 'editId'  
+
 
 
 const EditWarp = () => {
@@ -86,7 +85,6 @@ const EditWarp = () => {
 export function FrontEnd(props: any) {
   const data = useMessageRef({} as any);
   useEffect(() => {
-    if(!data.isReady){return}
     data.message.onMessage = {
       [BackEndMessageTypeEnum.init]: () => {
         let components = {} as any;
@@ -98,39 +96,17 @@ export function FrontEnd(props: any) {
         data.Action.syncComponents(components)
       },
     };
-  }, [data.isReady]);
-  const renderFn = (v:EditDataType['layout'][number])=>{
-    const current = data.GlobalData.editData.components[v.key]
-    const Component = props.Components[current.key]
-    const deepLayoutChildrenRender = ()=>{
-      if(Component.config?.children){
-        const children = v.children||[]
-        let ret:any = {}
-        if(Component.config.children.deep){
-          children.forEach(item=>{
-            ret[item.key] = transformLayout(item.children,renderFn)
-          })
-        }else{
-          ret = transformLayout(children,renderFn)
-        }
-        return ret
-      }else{
-        return null
-      }
-    }
-    return (
-      <>
-        <input type="hidden" id={prefix+current.id} />
-        <Component {...current.formData} key={current.id} >
-          {deepLayoutChildrenRender()}
-        </Component>
-      </>
-    );
-  }
+  }, []);
   return (
-    <EditorContext.Provider value={data}>
-      <EditWarp></EditWarp>
-      {transformLayout(data.GlobalData.editData.layout,renderFn)}
-    </EditorContext.Provider>
+    <div style={{position: "relative"}}>
+      <EditorContext.Provider value={data}>
+        <EditWarp></EditWarp>
+        {transformLayout(data.GlobalData.editData.layout,renderFn({
+          editData:data.GlobalData.editData,
+          Components:props.Components,
+          edit:true
+        }))}
+      </EditorContext.Provider>
+    </div>
   );
 }

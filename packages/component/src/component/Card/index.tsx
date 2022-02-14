@@ -1,9 +1,9 @@
 import React, { FC,  ReactChild } from 'react';
-export interface Props{
+export interface CardProps{
   children?: ReactChild;
   style: React.CSSProperties
 }
-export const DefaultStyle:Props['style'] = {
+export const CardDefaultStyle:CardProps['style'] = {
   // 固定样式
   display:'flex',
   flexWrap:'wrap',
@@ -15,9 +15,9 @@ export const DefaultStyle:Props['style'] = {
   height:'100%',
 }
 
-export const Card: FC<Props> = ({ children,style}) => {
+export const Card: FC<CardProps> = ({ children,style}) => {
   return <div style={{
-    ...DefaultStyle,
+    ...CardDefaultStyle,
     ...style,
   }}>
       {children}

@@ -1,6 +1,5 @@
-import React, { useMemo } from 'react';
+import React, { useMemo,useEffect, useRef, useState, useCallback  } from 'react';
 import { v4 as uuid } from 'uuid';
-import { useEffect, useRef, useState, useCallback } from 'react';
 
 export interface ComponentType {
   key: string;
@@ -25,7 +24,7 @@ export interface MessageType {
   onMessage: {
     [key in any]: (data: any) => void;
   };
-  postMessage: (data: any) => void;
+  postMessage?: (data: any) => void;
 }
 export interface ComponentsItemType extends Pick<ComponentType,'key'|'formData'> {
   id: string;
@@ -53,14 +52,7 @@ interface SetGlobalDataSyncType {
 }
 
 
-export const transformLayout = <T extends any[],K=T[number]>(layout:T,fn:(item:K,parentLayout?:K)=>any,parentLayout?:K)=>{
-  let ret = [];
-  for (let i = 0; i < layout.length; i++) {
-    let item = fn(layout[i],parentLayout)
-    ret.push(item)
-  }
-  return ret
-}
+
 export function deepLayout<T extends any[]>(
   layout:T,
   fn:(data:{
@@ -109,9 +101,8 @@ export function useMessageRef(
   // 正在编辑的 组件
   const select = useMemo(()=>{
     return getComponent(GlobalData.selectComponentId)
-  },[GlobalData])
+  },[GlobalData.selectComponentId,getComponent])
   // iframe 消息通信
-  const [isReady, setIsReady] = useState(false);
   const message = useRef<MessageType>({
     onMessage:{}
   } as MessageType);
@@ -124,6 +115,13 @@ export function useMessageRef(
           if (iframe.current) {
             type = 'BackEnd';
           } else {
+            if(event.data.type===BackEndMessageTypeEnum.init){
+              // FrontEnd 初始化
+              message.current.postMessage = (data: any) => {
+                console.log('FrontEnd','-->',data.type,data.data);
+                window.parent.postMessage(data, event.data.data);
+              };
+            }
             type = 'FrontEnd';
           }
           console.log(type,'<--',event.data.type,event.data.data);
@@ -153,25 +151,19 @@ export function useMessageRef(
           type: BackEndMessageTypeEnum.init,
           data: window.location.origin,
         });
-        setIsReady(true)
       };
-    } else {
-      // FrontEnd 初始化
-      message.current.postMessage = (data: any) => {
-        console.log('FrontEnd','-->',data.type,data.data);
-        window.parent.postMessage(data, window.parent.location.origin);
-      };
-      setIsReady(true)
-    }
+    } 
   }, [iframe.current]);
   // 带通信同步的修改全局数据方法
   const setGlobalDataSync = useCallback<SetGlobalDataSyncType>((fn) => {
     setGlobalData((pre) => {
       const _pre = fn(pre);
-      message.current.postMessage({
-        type: PublicMessageTypeEnum.setGlobalData,
-        data: _pre,
-      });
+      if(message.current.postMessage){
+        message.current.postMessage({
+          type: PublicMessageTypeEnum.setGlobalData,
+          data: _pre,
+        });
+      }
       return  Object.assign({},pre,_pre);
     });
   }, []);
@@ -270,9 +262,12 @@ export function useMessageRef(
         })
       },
       syncEditData:(editData:GlobalData['editData'])=>{
-        setGlobalDataSync(()=>{
+        setGlobalDataSync((pre)=>{
           return {
-            editData,
+            editData:{
+              ...pre.editData,
+              ...editData
+            },
           }
         })
       },
@@ -341,7 +336,6 @@ export function useMessageRef(
     GlobalData,
     select,
     getComponent,
-    isReady,
   };
 }
 

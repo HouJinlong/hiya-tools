@@ -2,10 +2,7 @@ import React from 'react';
 import { Meta, Story } from '@storybook/react';
 import { FrontEnd } from '../../src/Editor/FrontEnd/index';
 import { getComponents } from '../../src/Editor/tool';
-import * as Card from '../../src/component/Card';
-import * as Image from '../../src/component/Image';
-import * as Tab from '../../src/component/Tab';
-import * as Text from '../../src/component/Text';
+import {Card,CardDefaultStyle,Image,Text,Tab} from '../../src/Component';
 
 const meta: Meta = {
   title: 'Editor/FrontEnd',
@@ -27,7 +24,7 @@ export const Default = Template.bind({});
 Default.args = {
   Components: {
     Card:getComponents({
-      Components:Card.Card,
+      Components:Card,
       config:{
         name: '布局组件',
         preview:'http://static.ixiaochuan.cn/hiya-version_test/c57fbd56c2c08328f7bb.png',
@@ -47,13 +44,13 @@ Default.args = {
           }
         },
         formData:{
-          style:Card.DefaultStyle
+          style:CardDefaultStyle
         },
         children:true
       }
     }),
     Image: getComponents({
-      Components:Image.Index,
+      Components:Image,
       config:{
         name: '图片组件',
         preview:
@@ -73,7 +70,7 @@ Default.args = {
       }
     }),
     Text:getComponents({
-      Components:Text.Index,
+      Components:Text,
       config:{
         name: '文本组件',
         preview:
@@ -104,7 +101,7 @@ Default.args = {
       }
     }),
     Tab:getComponents({
-      Components:Tab.Index,
+      Components:Tab,
       config:{
         name: '选项卡',
         preview:

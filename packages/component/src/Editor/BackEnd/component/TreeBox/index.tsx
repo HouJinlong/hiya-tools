@@ -1,7 +1,7 @@
 import React, { useContext, useMemo } from 'react';
 import { Tree, Empty } from 'antd';
-import { EditorContext,transformLayout } from '../../../EditorContext';
-
+import { EditorContext } from '../../../EditorContext';
+import {  transformLayout} from '../../../tool';
 export function TreeBox() {
   const { GlobalData,Action,getComponent } = useContext(EditorContext);
   const treeData = useMemo(()=>{

@@ -1,14 +1,15 @@
 import React from 'react'
-export interface Props{
+export interface ImageProps{
   src: string;
 }
-export function Index(props:Props) {
+export function Image(props:ImageProps) {
   return (
     <img
       src={props.src}
       style={{
         maxWidth: "100%",
-        maxHeight: "100%"
+        maxHeight: "100%",
+        display: 'block'
       }}
       alt=""
     />

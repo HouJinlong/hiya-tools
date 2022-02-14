@@ -1,10 +1,10 @@
 import React, { FC } from 'react';
 
-export interface Props{
+export interface TextProps{
   text:string;
   style: React.CSSProperties
 }
-export const Index: FC<Props> = ({ text,style}) => {
+export const Text: FC<TextProps> = ({ text,style}) => {
   return <div style={{
     ...style,
   }}>

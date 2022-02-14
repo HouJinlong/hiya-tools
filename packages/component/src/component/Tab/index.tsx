@@ -1,33 +1,32 @@
 import React, { useEffect, useState,ReactChild } from 'react';
 import * as Style from './style';
-export interface Props {
+export interface TabProps {
   tab: string[];
-  tabIndex: number;
+  tabIndex: string;
   children:{
-    [key in Props['tabIndex']]:ReactChild
+    [key in TabProps['tabIndex']]:ReactChild
   },
   TabsStyle:React.CSSProperties
   TabsItemStyle:React.CSSProperties
   TabsItemActiveStyle:React.CSSProperties
 }
-export function Index(props: Props) {
+export function Tab(props: TabProps) {
   const [tabIndex, setTabIndex] = useState(props.tabIndex);
   useEffect(() => {
     setTabIndex(props.tabIndex);
   }, [props.tabIndex]);
   return (
     <>
-      <Style.Tabs css={{
-        ...props.TabsStyle
-      }}>
-        {props.tab.map((v, i) => {
+      <Style.Tabs style={props.TabsStyle}>
+        {props.tab.map((v, _i) => {
+          const i = String(_i)
           return (
             <Style.TabsItem
               key={i}
               onClick={() => {
                 setTabIndex(i)
               }}
-              css={{
+              style={{
                 ...props.TabsItemStyle,
                 ...Object(tabIndex === i ? props.TabsItemActiveStyle:{})
               }}
