@@ -1,14 +1,21 @@
 import React from 'react'
 export interface ImageProps{
+  width:string,
+  height:string,
   src: string;
 }
+export const ImageDefaultProps={
+  width:'100%',
+  height:'auto',
+  src: 'http://static.ixiaochuan.cn/hiya-version_test/c57fbd56c2c08328f7bb.png'
+}
 export function Image(props:ImageProps) {
+  const {src,...style} = props
   return (
     <img
       src={props.src}
       style={{
-        maxWidth: "100%",
-        maxHeight: "100%",
+        ...style,
         display: 'block'
       }}
       alt=""

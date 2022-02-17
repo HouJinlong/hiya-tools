@@ -1,6 +1,6 @@
 import React from 'react';
 import { Meta, Story } from '@storybook/react';
-import { Form } from '../../src';
+import { Form } from '../../src/ReactJsonschemaForm';
 import { Input, Row, Col } from 'antd';
 import { useEffect, useState } from '@storybook/addons';
 const meta: Meta = {
@@ -84,10 +84,6 @@ BoxStyleSetter.args = {
         type: 'string',
         title: '外边距',
       },
-      borderStyle: {
-        type: 'string',
-        title: '边框样式',
-    }
     },
   },
   uiSchema: {
@@ -132,7 +128,10 @@ StyleSetter.args = {
   },
   uiSchema: {
       "style":{
-        "ui:field": "StyleSetter"
+        "ui:field": "StyleSetter",
+        'ui:options':{
+          open:true
+        }
       }
   },
   formData: {

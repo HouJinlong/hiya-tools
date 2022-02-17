@@ -1,5 +1,4 @@
 import React, { useEffect, useState,ReactChild } from 'react';
-import * as Style from './style';
 export interface TabProps {
   tab: string[];
   tabIndex: string;
@@ -17,25 +16,35 @@ export function Tab(props: TabProps) {
   }, [props.tabIndex]);
   return (
     <>
-      <Style.Tabs style={props.TabsStyle}>
+      <div style={{
+        display:'flex',
+        alignItems:'center',
+        ...props.TabsStyle,
+      }}>
         {props.tab.map((v, _i) => {
           const i = String(_i)
           return (
-            <Style.TabsItem
+            <div
               key={i}
               onClick={() => {
                 setTabIndex(i)
               }}
               style={{
+                flexShrink: 0,
+                boxSizing:'border-box',
+                display:'flex',
+                alignItems:'center',
+                justifyContent:'center',
                 ...props.TabsItemStyle,
-                ...Object(tabIndex === i ? props.TabsItemActiveStyle:{})
+                ...Object(tabIndex === i ? props.TabsItemActiveStyle:{
+                })
               }}
             >
               {v}
-            </Style.TabsItem>
+            </div>
           );
         })}
-      </Style.Tabs>
+      </div>
       {props.children[tabIndex]}
     </>
   );

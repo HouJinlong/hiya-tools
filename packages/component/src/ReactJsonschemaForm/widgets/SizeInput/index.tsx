@@ -40,8 +40,15 @@ const NormalSizeOptions = [
   createSpecialSizeOption('auto'),
   createUnitType('px'),
   createUnitType('%'),
+  createUnitType('vw'),
   createUnitType('vh'),
-  createUnitType('em'),
+  // createUnitType('em'),
 ];
 export const SizeInput = createPolyInput(NormalSizeOptions);
+export const BackgroundSizeInput = createPolyInput([
+  createSpecialSizeOption('cover'),
+  createSpecialSizeOption('contain'),
+  createUnitType('px'),
+  createUnitType('%'),
+]);
   

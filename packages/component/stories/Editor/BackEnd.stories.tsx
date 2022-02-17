@@ -21,7 +21,7 @@ const Template: Story<BackEndPropsType> = args => <div style={{margin:'-1rem',he
 export const Default = Template.bind({});
 
 Default.args = {
-  'iframe':`http://192.168.80.33:7100/ToyBricksEdit`||`${window.location.origin}/iframe.html?id=editor-frontend--default&args=&viewMode=story`,
+  'iframe':`${window.location.origin}/iframe.html?id=editor-frontend--default&args=&viewMode=story`,
   data:{
     "components": {
         "9021843e-500d-469b-9586-4772ddf32fb2": {

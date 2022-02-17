@@ -37,13 +37,14 @@ const EditWarp = () => {
       for (let index = 0; index < e.path.length; index++) {
         const id = e.path[index]?.previousElementSibling?.id?.replace(prefix,'')
         if(GlobalData.editData.components[id]){
+          e.stopPropagation();  
           return Action.select(id)
         }
       }
     }
-    window.addEventListener('click',fn)
+    window.addEventListener('click',fn,true)
     return ()=>{
-      window.removeEventListener('click',fn)
+      window.removeEventListener('click',fn,true)
     }
   },[GlobalData.editData.components])
   const [rect,setRect] = useState<any>(null)
@@ -81,7 +82,17 @@ const EditWarp = () => {
     }
   </Style.ActionBox>
 };
-
+const View = ({editData,Components}:any)=>{
+  return <>
+    {
+      transformLayout(editData.layout,renderFn({
+        editData,
+        Components,
+        edit:true
+      }))
+    }
+  </>
+}
 export function FrontEnd(props: any) {
   const data = useMessageRef({} as any);
   useEffect(() => {
@@ -101,11 +112,7 @@ export function FrontEnd(props: any) {
     <div style={{position: "relative"}}>
       <EditorContext.Provider value={data}>
         <EditWarp></EditWarp>
-        {transformLayout(data.GlobalData.editData.layout,renderFn({
-          editData:data.GlobalData.editData,
-          Components:props.Components,
-          edit:true
-        }))}
+        <View editData={data.GlobalData.editData} Components={props.Components}></View>
       </EditorContext.Provider>
     </div>
   );

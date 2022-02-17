@@ -3,7 +3,7 @@ import React from 'react';
 import { IconWidget } from '../../../IconWidget';
 import * as Style from './style';
 import { SizeInput } from '../../widgets/SizeInput';
-import {Field} from '@rjsf/core';
+import {FieldTemplateProps} from '@rjsf/core';
 import { Theme  } from '@rjsf/antd';
 const {FieldTemplate} = Theme
 type Position = 'top' | 'right' | 'left' | 'bottom' | 'all';
@@ -17,8 +17,8 @@ const PositionMap = {
   left: 4,
   all: 1,
 };
-export const BoxStyleSetter:Field  = (props)=>{
-  const createPositionHandler = (position: Position, props: any) => {
+export const BoxStyleSetter  = (props:FieldTemplateProps<any>)=>{
+  const createPositionHandler = (position: Position) => {
     const matched = String(props.formData).match(BoxRex) || [];
     const value = matched[PositionMap[position]];
     const v1 = matched[1];
@@ -27,7 +27,6 @@ export const BoxStyleSetter:Field  = (props)=>{
     const v4 = matched[4];
     const allEqualls = v1 === v2 && v2 === v3 && v3 === v4;
     return {
-      ...props,
       value: position === 'all' ? (allEqualls ? v1 : undefined) : value,
       onChange(value: string) {
         if (position === 'all') {
@@ -52,9 +51,9 @@ export const BoxStyleSetter:Field  = (props)=>{
       <Collapse ghost>
         <Collapse.Panel
           header={
-            <FieldTemplate {...props} label={props.schema.title || props.name} displayLabel={true}>
+            <FieldTemplate {...props} displayLabel={true}>
               <SizeInput
-                  {...createPositionHandler('all', props)}
+                  {...createPositionHandler('all')}
                   exclude={['inherit', 'auto']}
                 />
             </FieldTemplate>
@@ -69,7 +68,7 @@ export const BoxStyleSetter:Field  = (props)=>{
                   <Style.Item>
                     <IconWidget {...((props.uiSchema['ui:options']?.labels as [])[i])} />
                     <SizeInput
-                      {...createPositionHandler(v as Position, props)}
+                      {...createPositionHandler(v as Position)}
                       exclude={['inherit', 'auto']}
                     />
                   </Style.Item>

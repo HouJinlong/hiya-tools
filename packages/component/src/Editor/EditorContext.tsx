@@ -283,6 +283,7 @@ export function useMessageRef(
 
   // 复制粘贴
   useEffect(()=>{
+    if(iframe.current)return;
     const EventMap:any = {
       copy:(event:any) => {
         deepLayout(GlobalData.editData.layout,({item:layoutData})=>{
@@ -290,11 +291,11 @@ export function useMessageRef(
             let copyLayout:any = JSON.parse(JSON.stringify(layoutData))
             let copyComponents:any = {}
             deepLayout([copyLayout],({item})=>{
-              const id = uuid();
-              let copyComponent = JSON.parse(JSON.stringify(GlobalData.editData.components[layoutData.key]))
-              copyComponent.id = id
-              copyComponents[id] = copyComponent
-              item.key = id
+              const components = GlobalData.editData.components[item.key]
+              if(components){
+                let copyComponent = JSON.parse(JSON.stringify(components))
+                copyComponents[item.key] = copyComponent
+              }
             })
             event.clipboardData.setData('text/plain', JSON.stringify({
               copyComponents,
@@ -310,8 +311,19 @@ export function useMessageRef(
         try {
           let {copyComponents,copyLayout} = JSON.parse(paste)
           if(copyComponents&&copyLayout){
+            let newCopyComponents:any = {}
+            deepLayout([copyLayout],({item})=>{
+              const components = copyComponents[item.key]
+              if(components){
+                const id = uuid()
+                let copyComponent = JSON.parse(JSON.stringify(components))
+                copyComponent.id = id;
+                newCopyComponents[id] = copyComponent
+                item.key = id
+              }
+            })
             Action.add({
-              components:copyComponents,
+              components:newCopyComponents,
               layout:copyLayout
             })
           }

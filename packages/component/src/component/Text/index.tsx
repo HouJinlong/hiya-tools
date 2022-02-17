@@ -6,6 +6,7 @@ export interface TextProps{
 }
 export const Text: FC<TextProps> = ({ text,style}) => {
   return <div style={{
+    display: 'flex',
     ...style,
   }}>
       {text}

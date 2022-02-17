@@ -1,16 +1,15 @@
 import React from 'react';
 import { DatePicker as AntdDatePicker } from 'antd';
 const { RangePicker: AntdRangePicker } = AntdDatePicker;
-import { Field } from '@rjsf/core';
+import { FieldTemplateProps } from '@rjsf/core';
 import { Theme } from '@rjsf/antd';
 import moment from 'moment';
 const { FieldTemplate } = Theme;
-export const DatePicker: Field = (props) => {
+export const DatePicker = (props:FieldTemplateProps<any>) => {
   const { valueFormat, ...options } = props.uiSchema['ui:options'] as any;
   return (
     <FieldTemplate
       {...props}
-      label={props.schema.title || props.name}
       displayLabel={true}
     >
       <AntdDatePicker
@@ -27,12 +26,11 @@ export const DatePicker: Field = (props) => {
   );
 };
 
-export const RangePicker: Field = (props) => {
+export const RangePicker = (props:FieldTemplateProps<any>) => {
   const { valueFormat, ...options } = props.uiSchema['ui:options'] as any;
   return (
     <FieldTemplate
       {...props}
-      label={props.schema.title || props.name}
       displayLabel={true}
     >
       <AntdRangePicker
@@ -50,3 +48,15 @@ export const RangePicker: Field = (props) => {
     </FieldTemplate>
   );
 };
+
+
+// {
+//   1:{
+//     id:榜单ID
+//     类型：榜单
+//   }
+//   2:{
+//     id:积分ID
+//     类型：1212
+//   }
+// }

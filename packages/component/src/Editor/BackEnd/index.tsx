@@ -16,6 +16,7 @@ export interface BackEndPropsType {
   data: any;
   onSave: any;
   onView:any;
+  UploadProps:any
 }
 const leftSiderButton = {
   Component: {
@@ -106,7 +107,7 @@ export function BackEnd(props: BackEndPropsType) {
         <Layout.Sider theme="light" width="300">
           <Style.scrollBox>
             <Card title="属性编辑区" size="small">
-              <AttributeBox />
+              <AttributeBox {...props} />
             </Card>
           </Style.scrollBox>
         </Layout.Sider>

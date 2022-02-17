@@ -2,7 +2,7 @@ import React from 'react';
 import { Meta, Story } from '@storybook/react';
 import { FrontEnd } from '../../src/Editor/FrontEnd/index';
 import { getComponents } from '../../src/Editor/tool';
-import {Card,CardDefaultStyle,Image,Text,Tab} from '../../src/Component';
+import * as  Component from '../../src/Component';
 
 const meta: Meta = {
   title: 'Editor/FrontEnd',
@@ -24,7 +24,7 @@ export const Default = Template.bind({});
 Default.args = {
   Components: {
     Card:getComponents({
-      Components:Card,
+      Components:Component.Card,
       config:{
         name: '布局组件',
         preview:'http://static.ixiaochuan.cn/hiya-version_test/c57fbd56c2c08328f7bb.png',
@@ -44,13 +44,13 @@ Default.args = {
           }
         },
         formData:{
-          style:CardDefaultStyle
+          style:Component.CardDefaultStyle
         },
         children:true
       }
     }),
     Image: getComponents({
-      Components:Image,
+      Components:Component.Image,
       config:{
         name: '图片组件',
         preview:
@@ -59,18 +59,36 @@ Default.args = {
           type: 'object',
           required: ['src'],
           properties: {
+            width: {
+              type: 'string',
+              title: '宽度',
+            },
+            height: {
+              type: 'string',
+              title: '高度',
+            },
             src: {
               type: 'string',
               title: '图片地址',
-              default:
-                'http://static.ixiaochuan.cn/hiya-version_test/c57fbd56c2c08328f7bb.png',
             },
           },
         },
+        uiSchema:{
+          width: {
+            'ui:widget': 'SizeInput',
+          },
+          height: {
+            'ui:widget': 'SizeInput',
+          },
+          src: {
+            'ui:widget': 'ImageInput',
+          },
+        },
+        formData:Component.ImageDefaultProps
       }
     }),
     Text:getComponents({
-      Components:Text,
+      Components:Component.Text,
       config:{
         name: '文本组件',
         preview:
@@ -101,7 +119,7 @@ Default.args = {
       }
     }),
     Tab:getComponents({
-      Components:Tab,
+      Components:Component.Tab,
       config:{
         name: '选项卡',
         preview:
@@ -119,8 +137,8 @@ Default.args = {
             },
             "tabIndex": {
               "title": "默认显示第几个选项卡",
-              "type": "number",
-               default:0,
+              "type": "string",
+               default:'0',
             },
             TabsStyle:{
               type:'object',

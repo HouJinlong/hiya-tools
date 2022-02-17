@@ -17,6 +17,7 @@ export const EditBoxIframe = styled.iframe`
   width: 375px;
   height: 667px;
   display: block;
+  flex-shrink: 0;
   margin: 20px;
   border: 0;
 `

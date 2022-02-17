@@ -3,7 +3,8 @@ import { EditorContext } from '../../../EditorContext';
 import { Empty } from 'antd';
 import * as Style from './style';
 import { Form } from '../../../../ReactJsonschemaForm';
-export function AttributeBox() {
+import { BackEndPropsType } from '../../index';
+export function AttributeBox(props:BackEndPropsType) {
   const {Action,select} = useContext(EditorContext);
   return (
     <Style.AttributeBox>
@@ -13,6 +14,9 @@ export function AttributeBox() {
           uiSchema={select.component.uiSchema}
           showErrorList={false}
           formData={select.editComponent.formData}
+          formContext={{
+            UploadProps: props.UploadProps,
+          }}
           onChange={(e)=>{
             if(e.errors.length==0){
               Action.update({

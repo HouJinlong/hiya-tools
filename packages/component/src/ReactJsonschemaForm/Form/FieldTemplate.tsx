@@ -3,11 +3,12 @@ import { Theme } from '@rjsf/antd';
 import {FieldTemplateProps} from '@rjsf/core';
 const {FieldTemplate} = Theme
 import * as fields from '../fields';
-let custom:any;
 export default function(props:FieldTemplateProps<any>){
-    if(!custom){
-        custom= Object.keys(fields);
+    const fieldKey =  props.uiSchema['ui:field'] as  keyof typeof fields
+    if(fields[fieldKey]){
+        const CustomFieldTemplate = fields[fieldKey] as  any
+        return <CustomFieldTemplate {...props} />
+    }else{
+        return <FieldTemplate {...props} />
     }
-    const id = custom.includes(props.uiSchema['ui:field'] as string)?'root':props.id
-    return <FieldTemplate {...props} id={id} />
 }
