@@ -37,6 +37,7 @@ export const resources = getResources({
 export const XcI18next: InitXcI18nextReturn<typeof defaultNS> = initXcI18next({
   defaultNS,
   resources,
+  initOptions:config.initOptions
 })
 export default {
   typeLang: config.typeLang,
