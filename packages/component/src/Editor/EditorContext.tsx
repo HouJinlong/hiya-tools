@@ -1,24 +1,22 @@
 import React, { useMemo,useEffect, useRef, useState, useCallback  } from 'react';
-import { v4 as uuid } from 'uuid';
-
+import { getComponentConfig } from './tool';
 export interface ComponentType {
   key: string;
   name: string;
-  preview: string;
-  schema: any;
+  getConfig?: string;
+  preview?: string;
+  schema?: any;
   uiSchema?: any;
   formData?: any;
-  children?:{
-    deep:string,
-    getName?:string
-  }
+  children?:any
+  // {
+  //   deep:string,
+  //   getName?:string
+  // }
 }
 
 export enum BackEndMessageTypeEnum {
   init = 'init',
-}
-export enum PublicMessageTypeEnum {
-  setGlobalData = 'setGlobalData',
 }
 export interface MessageType {
   onMessage: {
@@ -39,19 +37,10 @@ export interface EditDataType {
     key:ComponentsItemType['id'];
     children:EditDataType['layout']
   }[];
+  // 本次修改的类型
+  type?:string;
+  [key:string]:any
 }
-export interface GlobalData {
-  components: {
-    [key in ComponentType['key']]:ComponentType
-  };
-  editData: EditDataType;
-  selectComponentId: ComponentsItemType['id'];
-}
-interface SetGlobalDataSyncType {
-  (fn: (data: GlobalData) => Partial<GlobalData>): void;
-}
-
-
 
 export function deepLayout<T extends any[]>(
   layout:T,
@@ -72,106 +61,194 @@ export function deepLayout<T extends any[]>(
     }
   }
 }
-export function useMessageRef(
-  iframe: React.RefObject<HTMLIFrameElement>
+export function useEditorContext(
+  iframe: React.RefObject<HTMLIFrameElement>,
 ) {
-  // 全局数据
-  const [GlobalData, setGlobalData] = useState<GlobalData>({
-    components:{},
-    editData:{
-      components: {},
-      layout: []
-    },
-    selectComponentId:''
-  });
-  useEffect(()=>{
-    console.log("编辑");
-  },[GlobalData.editData])
-  const getComponent = useCallback((id)=>{
-   const editComponent = GlobalData.editData.components[id]
-    if(editComponent){
-      return {
-        component:GlobalData.components[editComponent.key],
-        editComponent
+  const publisher = useMemo(()=>{
+    return {
+      subscribers: {
+        any: []
+      } as any,
+      subscribe: function(fn:any, type = 'any') {
+        if (typeof this.subscribers[type] === 'undefined') {
+          this.subscribers[type] = []
+        }
+        this.subscribers[type].push(fn)
+      },
+      unsubscribe: function(fn:any, type:any) {
+        this.visitSubscribers('unsubscribe', fn, type)
+      },
+      publish: function(publication:any, type:any) {
+        this.visitSubscribers('publish', publication, type)
+      },
+      visitSubscribers: function(action:'unsubscribe'|'publish', arg:any, type = 'any') {
+        (this.subscribers[type]||[]).forEach((currentValue:any, index:any) => {
+          if (action === 'publish') {
+            currentValue(arg)
+          } else if (action === 'unsubscribe') {
+            if (currentValue === arg) {
+              this.subscribers[type].splice(index, 1)
+            }
+          }
+        })
       }
-    }else{
-      return null
     }
-  },[GlobalData])
-  // 正在编辑的 组件
-  const select = useMemo(()=>{
-    return getComponent(GlobalData.selectComponentId)
-  },[GlobalData.selectComponentId,getComponent])
+  },[])
+  const GlobalDataState = {
+     // 组件配置信息
+    components:useState<{
+      [key in ComponentType['key']]:ComponentType
+    }>({}),
+     // 编辑信息 组件配置数据 + 布局
+    editData:useState<EditDataType>({
+      components: {},
+      layout: [],
+    }),
+     // 当前选中组件
+    selectComponentId:useState(''),
+     // 编辑信息 组件配置数据 + 布局
+    customData:useState<any>({}),
+  }
+ 
   // iframe 消息通信
-  const message = useRef<MessageType>({
-    onMessage:{}
-  } as MessageType);
+  const postMessage = useRef<any>(null);
   useEffect(() => {
+    const fn = (event:any) => {
+      if (event.data.type) {
+        let type:any;
+        if (iframe.current) {
+          type = 'BackEnd';
+        } else {
+          if(event.data.type==='init'){
+            // FrontEnd 初始化
+            postMessage.current=(data: any) => {
+              console.log('FrontEnd','-->',data.type,data.data);
+              window.parent.postMessage(data, event.data.data);
+            }
+            postMessage.current({
+              type:'init',
+              data:window.location.origin
+            })
+          }
+          type = 'FrontEnd';
+        }
+        console.log(type,'<--',event.data.type,event.data.data);
+        publisher.publish(event.data.data,event.data.type) 
+      }
+    }
     window.addEventListener(
       'message',
-      (event) => {
-        if (event.data.type) {
-          let type:any;
-          if (iframe.current) {
-            type = 'BackEnd';
-          } else {
-            if(event.data.type===BackEndMessageTypeEnum.init){
-              // FrontEnd 初始化
-              message.current.postMessage = (data: any) => {
-                console.log('FrontEnd','-->',data.type,data.data);
-                window.parent.postMessage(data, event.data.data);
-              };
-            }
-            type = 'FrontEnd';
-          }
-          console.log(type,'<--',event.data.type,event.data.data);
-          if (event.data.type === PublicMessageTypeEnum.setGlobalData) {
-            setGlobalData((pre) => {
-              return Object.assign({},pre,event.data.data);
-            });
-          }
-          message.current.onMessage[event.data.type] &&
-            message.current.onMessage[event.data.type](event.data.data);
-        }
-      },
+      fn,
       false
     );
     if (iframe.current) {
       const iframeEl = iframe.current
       // BackEnd 初始化
       iframeEl.onload = () => {
-        message.current.postMessage = (data: any) => {
+        postMessage.current=(data:any) => {
           console.log('BackEnd','-->',data.type,data.data);
           iframeEl.contentWindow?.postMessage(
             data,
             new URL(iframeEl.src).origin
           );
-        };
-        message.current.postMessage({
-          type: BackEndMessageTypeEnum.init,
-          data: window.location.origin,
-        });
+        }
+        postMessage.current({
+          type:'init',
+          data:window.location.origin
+        })
       };
     } 
+    return ()=>{
+      window.removeEventListener(
+        'message',
+        fn,
+        false
+      );
+    }
   }, [iframe.current]);
-  // 带通信同步的修改全局数据方法
-  const setGlobalDataSync = useCallback<SetGlobalDataSyncType>((fn) => {
-    setGlobalData((pre) => {
-      const _pre = fn(pre);
-      if(message.current.postMessage){
-        message.current.postMessage({
-          type: PublicMessageTypeEnum.setGlobalData,
-          data: _pre,
-        });
+ 
+  const [editDataHistory,setEditDataHistory] = useState<any>({
+    data:[],
+    index:0,
+  })
+  const editDataChange = (_pre:any)=>{
+    if(iframe.current&&_pre.type){
+      setEditDataHistory((v:any)=>{
+        const {type,...other} = _pre
+        const data = [
+          ...(type==='初始化'?[]:v.data.slice(0,v.index)),
+          {
+            data:JSON.stringify(other),
+            text:type
+          }
+        ]
+        return {
+          data,
+          index:data.length
+        }
+      })
+    }
+  }
+   // 同步修改
+   const GlobalData ={
+    'editData':GlobalDataState.editData[0],
+    'components':GlobalDataState.components[0],
+    'selectComponentId':GlobalDataState.selectComponentId[0],
+    'customData':GlobalDataState.customData[0],
+  }
+  for(let key in GlobalDataState){
+    useEffect(()=>{
+      const fn = (data:any)=>{
+        if(key==='editData'&&iframe.current){
+          editDataChange(data)
+        }
+        GlobalDataState[key as keyof typeof GlobalDataState][1](data)
       }
-      return  Object.assign({},pre,_pre);
+      publisher.subscribe(fn,key);
+      return ()=>{
+        publisher.unsubscribe(fn,key);
+      }
+    },[GlobalDataState])
+  }
+  // 带步的修改方法
+  const setGlobalDataSync = (key:keyof typeof GlobalDataState,fn:any) =>{
+    GlobalDataState[key][1]((pre:any) => {
+      let _pre = fn(pre);
+      if(key==='editData'&&iframe.current){
+        editDataChange(_pre)
+      }
+      postMessage.current!({
+        type: key,
+        data: _pre,
+      })
+      return _pre
     });
-  }, []);
+  }
+  const getComponentById = useCallback((id)=>{
+     const editComponent = GlobalData.editData.components[id]
+      if(editComponent){
+        return {
+          component:getComponentConfig({
+            Config:GlobalData.components[editComponent.key],
+            formData:editComponent.formData,
+            editData:GlobalData.editData,
+            customData:GlobalData.customData
+          }),
+          editComponent
+        }
+      }else{
+        return null
+      }
+   },[GlobalData])
+  const select = useMemo(()=>{
+    return getComponentById(GlobalData.selectComponentId)
+  },[GlobalData])
+
   // 操作
   const Action = useMemo(()=>{
     return {
       delete:(id:ComponentsItemType['id'])=>{
-        setGlobalDataSync(({editData}) => {
+        setGlobalDataSync('editData',(editData:EditDataType)  => {
           deepLayout(editData.layout,({item,i,layout})=>{
             if(item.key===id){
               deepLayout(layout.splice(i,1),(v)=>{
@@ -182,14 +259,13 @@ export function useMessageRef(
               return true
             }
           })
-          return {
-            selectComponentId:'',
-            editData
-          }
+          editData['type']='删除组件'
+          return editData
         })
+        setGlobalDataSync('selectComponentId',()=>"")
       },
       add:({components,layout}:any)=>{
-        setGlobalDataSync(({editData,}) => {
+        setGlobalDataSync('editData',(editData:EditDataType)  => {
           // 无选中添加到根
           let parentLayout = editData.layout
           // 有选中从选中中取
@@ -205,7 +281,7 @@ export function useMessageRef(
                 }else{
                   for (let index = 0; index < path.length; index++) {
                     const v = path[index];
-                    let data = getComponent(v.key);
+                    let data = getComponentById(v.key);
                     if(data?.component.children){
                       temp={
                         layout:v,
@@ -216,8 +292,8 @@ export function useMessageRef(
                   }
                 }
                 if(temp){
-                  if(temp.data.component.children?.deep){
-                    const key = temp.data.editComponent.formData[temp.data.component.children.deep];
+                  const key = temp.data.component.children?.deep
+                  if(key){
                     let index = temp.layout.children.findIndex(v=>v.key===key) 
                     if(index===-1){
                       // 创建虚拟层
@@ -241,115 +317,45 @@ export function useMessageRef(
             ...components
           }
           parentLayout.push(layout)
-          return {
-            editData
-          }
+          editData['type']='添加组件'
+          return editData
         })
       },
       update:(component:ComponentsItemType)=>{
-        setGlobalDataSync(({editData}) => {
+        setGlobalDataSync('editData',(editData:EditDataType)  => {
           editData.components[component.id] = component
-          return {
-            editData
-          }
+          editData['type']='属性修改'
+          return editData
         })
       },
       select:(id:ComponentsItemType['id'])=>{
-        setGlobalDataSync(()=>{
+        setGlobalDataSync('selectComponentId',()=>id)
+      },
+      syncEditData:(editData:EditDataType)=>{
+        setGlobalDataSync('editData',(pre:EditDataType)=>{
           return {
-            selectComponentId:id
+            ...pre,
+            ...editData,
+            type:'初始化'
           }
         })
       },
-      syncEditData:(editData:GlobalData['editData'])=>{
-        setGlobalDataSync((pre)=>{
-          return {
-            editData:{
-              ...pre.editData,
-              ...editData
-            },
-          }
-        })
-      },
-      syncComponents:(components:GlobalData['components'])=>{
-        setGlobalDataSync(()=>{
-          return {
-            components,
-          }
-        })
-      }
     }
-  },[select])
+  },[select,setGlobalDataSync])
 
-  // 复制粘贴
-  useEffect(()=>{
-    if(iframe.current)return;
-    const EventMap:any = {
-      copy:(event:any) => {
-        deepLayout(GlobalData.editData.layout,({item:layoutData})=>{
-          if(layoutData.key===GlobalData.selectComponentId){
-            let copyLayout:any = JSON.parse(JSON.stringify(layoutData))
-            let copyComponents:any = {}
-            deepLayout([copyLayout],({item})=>{
-              const components = GlobalData.editData.components[item.key]
-              if(components){
-                let copyComponent = JSON.parse(JSON.stringify(components))
-                copyComponents[item.key] = copyComponent
-              }
-            })
-            event.clipboardData.setData('text/plain', JSON.stringify({
-              copyComponents,
-              copyLayout
-            }));
-            event.preventDefault();
-            event.stopPropagation();
-          }
-        })
-      },
-      paste:(e:any)=>{
-        let paste = (e.clipboardData || (window as any).clipboardData).getData('text/plain');
-        try {
-          let {copyComponents,copyLayout} = JSON.parse(paste)
-          if(copyComponents&&copyLayout){
-            let newCopyComponents:any = {}
-            deepLayout([copyLayout],({item})=>{
-              const components = copyComponents[item.key]
-              if(components){
-                const id = uuid()
-                let copyComponent = JSON.parse(JSON.stringify(components))
-                copyComponent.id = id;
-                newCopyComponents[id] = copyComponent
-                item.key = id
-              }
-            })
-            Action.add({
-              components:newCopyComponents,
-              layout:copyLayout
-            })
-          }
-        } catch (error) {
-          console.log('error: ', error);
-        }
-      }
-    }
-    Object.keys(EventMap).forEach(v=>{
-      window.addEventListener(v,EventMap[v]);
-    })
-   
-    return ()=>{
-      Object.keys(EventMap).forEach(v=>{
-        window.removeEventListener(v,EventMap[v]);
-      })
-    }
-  },[GlobalData])
   return {
-    Action,
-    message:message.current,
+    publisher,
     GlobalData,
+    editDataHistory,
+    setEditDataHistory,
+    setGlobalDataSync,
+    getComponentById,
     select,
-    getComponent,
-  };
+    Action
+  }
 }
-
 export const EditorContext =
-  React.createContext<ReturnType<typeof useMessageRef>>({} as any);
+  React.createContext<ReturnType<typeof useEditorContext>>({} as any);
+
+
+

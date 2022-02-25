@@ -5,7 +5,7 @@ export interface TextProps{
   style: React.CSSProperties
 }
 export const Text: FC<TextProps> = ({ text,style}) => {
-  return <div style={{
+  return <div className='ToyBricks-Text' style={{
     display: 'flex',
     ...style,
   }}>

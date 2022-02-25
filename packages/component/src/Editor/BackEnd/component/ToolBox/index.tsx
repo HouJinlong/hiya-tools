@@ -21,6 +21,9 @@ export function ToolBox(props: BackEndPropsType) {
     >
       <Space>
         {
+          props.ToolBoxSlot
+        }
+        {
           props.onView?(
             <>
               <Modal title="预览" visible={isModalVisible} width={340} footer={null} onCancel={()=>{

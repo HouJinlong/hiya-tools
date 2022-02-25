@@ -16,6 +16,7 @@ const Template: Story<Props> = function (args) {
   useEffect(() => {
     setFormData(args.formData);
   }, [args.formData]);
+  const S = args.getS(formData)
   return (
     <Row>
       <Col span={8}>
@@ -34,9 +35,10 @@ const Template: Story<Props> = function (args) {
             wrapperCol: { span: 14 },
           }}
           liveValidate={true}
-          {...args}
+          {...S}
           formData={formData}
           onChange={(e) => {
+            console.log(111);
             setFormData(e.formData);
           }}
         >
@@ -69,35 +71,40 @@ const labels = [
   },
 ];
 Default.args = {
-  schema: {
-    type: 'object',
-    properties: {
-      margin: {
-        type: 'string',
-        title: '外边距',
+  getS:(a)=>{
+    console.log('a',a);
+    return {
+      schema: {
+        type: 'object',
+        properties: {
+          margin: {
+            type: 'string',
+            title: '外边距',
+          },
+          color: {
+            type: 'string',
+            title: '颜色',
+          },
+          style:{
+            type:'object',
+            title:'样式'
+          }
+        },
       },
-      color: {
-        type: 'string',
-        title: '颜色',
-      },
-      style:{
-        type:'object',
-        title:'样式'
+      uiSchema: {
+        margin: {
+          'ui:field': 'BoxStyleSetter',
+          'ui:options':{
+            labels,
+          }
+        },
+        color: {
+          'ui:widget': 'ColorInput',
+        },
+        "style":{
+          "ui:field": "StyleSetter"
+        }
       }
-    },
-  },
-  uiSchema: {
-    margin: {
-      'ui:field': 'BoxStyleSetter',
-      'ui:options':{
-        labels,
-      }
-    },
-    color: {
-      'ui:widget': 'ColorInput',
-    },
-    "style":{
-      "ui:field": "StyleSetter"
     }
   },
   formData: {

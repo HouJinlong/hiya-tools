@@ -5,6 +5,7 @@ import * as widgets from '../widgets';
 import * as fields from '../fields';
 import FieldTemplate from './FieldTemplate';
 const FormComponent = withTheme(AntDTheme) as any;
+console.log(widgets);
 interface MyFormProps extends FormProps<any>{
     widgets?:any
 } 

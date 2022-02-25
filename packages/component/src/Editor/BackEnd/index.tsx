@@ -2,34 +2,36 @@ import React, { useRef, useState, useEffect } from 'react';
 import { Layout, Card, Button } from 'antd';
 
 import 'antd/dist/antd.css';
-import { useMessageRef, EditorContext } from '../EditorContext';
+import { useEditorContext, EditorContext } from '../EditorContext';
 import * as Style from './style';
-// import phonePng from './phone.png';
 
 import { ComponentBox } from './component/ComponentBox';
 import { AttributeBox } from './component/AttributeBox';
 import { TreeBox } from './component/TreeBox';
 import { ToolBox } from './component/ToolBox';
+import { HistoryBox } from './component/HistoryBox';
 import { IconWidget } from '../../IconWidget';
 export interface BackEndPropsType {
   iframe: string;
   data: any;
   onSave: any;
+  customData:any;
   onView:any;
   UploadProps:any
+  ToolBoxSlot:any
 }
 const leftSiderButton = {
   Component: {
     title: '组件',
-    Component: <ComponentBox />,
+    Component: ComponentBox,
   },
   Outline: {
     title: '结构',
-    Component: <TreeBox />,
+    Component:TreeBox,
   },
   History: {
     title: '修改历史',
-    Component: <div>1</div>,
+    Component:HistoryBox,
   },
 };
 const leftSiderButtonKeys = Object.keys(
@@ -37,12 +39,39 @@ const leftSiderButtonKeys = Object.keys(
 ) as (keyof typeof leftSiderButton)[];
 export function BackEnd(props: BackEndPropsType) {
   const iframe = useRef<HTMLIFrameElement>(null);
-  const data = useMessageRef(iframe);
-  useEffect(() => {
-    if (data.message.postMessage) {
-      data.Action.syncEditData(props.data);
+  const data = useEditorContext(iframe);
+  const {publisher,editDataHistory,setGlobalDataSync} = data
+  const [isInit,setIsInit] = useState(0)
+  useEffect(()=>{
+    const fn = ()=>{
+      if(editDataHistory.index){
+        setGlobalDataSync('editData',()=>{
+          return JSON.parse(editDataHistory.data[editDataHistory.index-1].data)
+        })
+      }else{
+        setGlobalDataSync('editData',(pre:any)=>{
+          return {
+            ...pre,
+            ...props.data,
+            type:'初始化'
+          }
+        })
+      }
+      setIsInit((e)=>e+1)
     }
-  }, [data.message.postMessage, props.data]);
+    
+    publisher.subscribe(fn,'init')
+    return ()=>{
+      publisher.unsubscribe(fn,'init')
+    }
+  },[editDataHistory])
+  useEffect(()=>{
+    if(isInit){
+      setGlobalDataSync('customData',()=>{
+        return props.customData
+      })
+    }
+  },[isInit,props.customData])
   const [leftSider, setLeftSider] = useState(leftSiderButtonKeys[0]);
   return (
     <EditorContext.Provider value={data}>
@@ -54,7 +83,10 @@ export function BackEnd(props: BackEndPropsType) {
         <Layout.Sider theme="light">
           <Style.scrollBox>
             <Card title={leftSiderButton[leftSider].title} size="small">
-              {leftSiderButton[leftSider].Component}
+              {(()=>{
+                const Component = leftSiderButton[leftSider].Component
+                return <Component {...(props as any)}></Component>
+              })()}
             </Card>
           </Style.scrollBox>
         </Layout.Sider>

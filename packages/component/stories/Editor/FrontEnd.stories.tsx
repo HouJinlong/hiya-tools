@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Meta, Story } from '@storybook/react';
 import { FrontEnd } from '../../src/Editor/FrontEnd/index';
 import { getComponents } from '../../src/Editor/tool';
 import * as  Component from '../../src/Component';
-
+import { RenderViewContext } from '../../src/Editor/RenderView';
 const meta: Meta = {
   title: 'Editor/FrontEnd',
   component: FrontEnd,
@@ -21,6 +21,11 @@ const Template: Story<any> = (args) => <div style={{margin:'-1rem'}}><FrontEnd {
 // https://storybook.js.org/docs/react/workflows/unit-testing
 export const Default = Template.bind({});
 
+const Warp = ({children})=>{
+  const data = useContext(RenderViewContext)
+  console.log('Warp',data);
+  return <div style={{color:'red'}}>{children}</div>
+}
 Default.args = {
   Components: {
     Card:getComponents({
@@ -122,61 +127,66 @@ Default.args = {
       Components:Component.Tab,
       config:{
         name: '选项卡',
-        preview:
-          'http://static.ixiaochuan.cn/hiya-version_test/c57fbd56c2c08328f7bb.png',
-          schema: {
-          type: 'object',
-          required: ['tab','tabIndex'],
-          properties: {
-            "tab": {
-              "type": "array",
-              "title": "选项卡文案",
-              "items": {
-                "type": "string",
+        getConfig:(function (data){
+          console.log('data: ', data);
+          return {
+            schema: {
+              type: 'object',
+              required: ['tab','tabIndex'],
+              properties: {
+                "tab": {
+                  "type": "array",
+                  "title": "选项卡文案"+data.formData.tabIndex,
+                  "items": {
+                    "type": "string",
+                  },
+                },
+                "tabIndex": {
+                  "title": "默认显示第几个选项卡",
+                  "type": "string",
+                   default:'0',
+                },
+                TabsStyle:{
+                  type:'object',
+                  title:'选项卡样式'
+                },
+                TabsItemStyle:{
+                  type:'object',
+                  title:'选项卡正常样式'
+                },
+                TabsItemActiveStyle:{
+                  type:'object',
+                  title:'选项卡选中样式'
+                }
               },
             },
-            "tabIndex": {
-              "title": "默认显示第几个选项卡",
-              "type": "string",
-               default:'0',
+            uiSchema:{
+              "TabsStyle":{
+                "ui:field": "StyleSetter"
+              },
+              "TabsItemStyle":{
+                "ui:field": "StyleSetter"
+              },
+              "TabsItemActiveStyle":{
+                "ui:field": "StyleSetter"
+              }
             },
-            TabsStyle:{
-              type:'object',
-              title:'选项卡样式'
+            formData:{
+              tab:[
+                "选项卡1",
+                "选项卡2"
+              ]
             },
-            TabsItemStyle:{
-              type:'object',
-              title:'选项卡正常样式'
-            },
-            TabsItemActiveStyle:{
-              type:'object',
-              title:'选项卡选中样式'
+            children:{
+              deep:data.formData.tabIndex,
+              getName:(e)=>{
+                return data.formData.tab[e]
+              }
             }
-          },
-        },
-        uiSchema:{
-          "TabsStyle":{
-            "ui:field": "StyleSetter"
-          },
-          "TabsItemStyle":{
-            "ui:field": "StyleSetter"
-          },
-          "TabsItemActiveStyle":{
-            "ui:field": "StyleSetter"
           }
-        },
-        formData:{
-          tab:[
-            "选项卡1",
-            "选项卡2"
-          ]
-        },
-        children:{
-          deep:'tabIndex',
-          getName:'return data.formData.tab[data.deep]'
-        }
+        }).toString()
       }
     })
   },   
+  Warp
 };
-

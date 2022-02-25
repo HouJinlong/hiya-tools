@@ -1,4 +1,5 @@
-import React, { useEffect, useState,ReactChild } from 'react';
+import React, { useEffect, useState,ReactChild, useContext } from 'react';
+import { RenderViewContext } from '../../Editor/RenderView';
 export interface TabProps {
   tab: string[];
   tabIndex: string;
@@ -10,13 +11,15 @@ export interface TabProps {
   TabsItemActiveStyle:React.CSSProperties
 }
 export function Tab(props: TabProps) {
+  const data = useContext(RenderViewContext)
+  console.log('Tab: ', data);
   const [tabIndex, setTabIndex] = useState(props.tabIndex);
   useEffect(() => {
     setTabIndex(props.tabIndex);
   }, [props.tabIndex]);
   return (
     <>
-      <div style={{
+      <div className='ToyBricks-Tab' style={{
         display:'flex',
         alignItems:'center',
         ...props.TabsStyle,
@@ -25,6 +28,7 @@ export function Tab(props: TabProps) {
           const i = String(_i)
           return (
             <div
+              className='ToyBricks-Tab-Item'
               key={i}
               onClick={() => {
                 setTabIndex(i)

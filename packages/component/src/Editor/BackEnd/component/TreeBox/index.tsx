@@ -3,12 +3,12 @@ import { Tree, Empty } from 'antd';
 import { EditorContext } from '../../../EditorContext';
 import {  transformLayout} from '../../../tool';
 export function TreeBox() {
-  const { GlobalData,Action,getComponent } = useContext(EditorContext);
+  const { GlobalData,Action,getComponentById } = useContext(EditorContext);
   const treeData = useMemo(()=>{
     if(!Object.keys(GlobalData.components).length) return []
     return transformLayout(GlobalData.editData.layout,function transformFn(item,parentLayout){
       let ret:any = {}
-      const editComponent = getComponent(item.key)
+      const editComponent = getComponentById(item.key)
       ret.key = item.key 
       if(editComponent){
         const {name} = editComponent.component
@@ -18,14 +18,10 @@ export function TreeBox() {
         ret.title = item.key
         ret.disabled = true
         if(parentLayout){
-          const parentEditComponent = getComponent(parentLayout.key)
+          const parentEditComponent = getComponentById(parentLayout.key)
           let getName = parentEditComponent?.component.children?.getName
           if(getName){
-            try {
-              const fn =  new Function('data', getName)
-              ret.title = fn({deep:item.key,formData:parentEditComponent?.editComponent.formData})
-            } catch (error) {
-            }
+            ret.title = getName(item.key)
           }
         }
       }

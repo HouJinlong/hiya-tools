@@ -3,11 +3,17 @@ import { EditorContext, ComponentType } from '../../../EditorContext';
 import { utils } from '@rjsf/core';
 import * as Style from './style';
 import { v4 as uuid } from 'uuid';
+import { getComponentConfig } from '../../../tool';
 export function ComponentBox() {
   const { GlobalData, Action } = useContext(EditorContext);
   return (
     <Style.ComponentBox>
-      {Object.values(GlobalData?.components || {}).map((v) => {
+      {Object.values(GlobalData?.components || {}).map((v)=>getComponentConfig({
+        Config:v,
+        formData:{},
+        customData:GlobalData.customData,
+        editData:GlobalData.editData
+      })).map((v) => {
         return (
           <Style.ComponentBoxItem
             key={v.key}
@@ -33,7 +39,7 @@ export function ComponentBox() {
               Action.select(id)
             }}
           >
-            <Style.ComponentBoxImg src={v.preview} />
+            {v.preview?<Style.ComponentBoxImg src={v.preview} />:null}
             <div>{v.name}</div>
           </Style.ComponentBoxItem>
         );

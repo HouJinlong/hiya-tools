@@ -19,10 +19,12 @@ export function AttributeBox(props:BackEndPropsType) {
           }}
           onChange={(e)=>{
             if(e.errors.length==0){
-              Action.update({
-                ...select.editComponent,
-                formData: e.formData,
-              })
+              if(JSON.stringify(select.editComponent.formData)!==JSON.stringify(e.formData)){
+                Action.update({
+                  ...select.editComponent,
+                  formData: e.formData,
+                })
+              }
             }
           }}
         ><div></div></Form>

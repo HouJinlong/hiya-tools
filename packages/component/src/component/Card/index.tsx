@@ -16,7 +16,7 @@ export const CardDefaultStyle:CardProps['style'] = {
 }
 
 export const Card: FC<CardProps> = ({ children,style}) => {
-  return <div style={{
+  return <div className='ToyBricks-Card' style={{
     ...CardDefaultStyle,
     ...style,
   }}>

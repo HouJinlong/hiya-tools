@@ -13,6 +13,7 @@ export function Image(props:ImageProps) {
   const {src,...style} = props
   return (
     <img
+      className='ToyBricks-Image'
       src={props.src}
       style={{
         ...style,

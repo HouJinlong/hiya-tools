@@ -10,7 +10,22 @@ export function getComponents(data:{
     })
     return data.Components
 }
-
+export const getComponentConfig =(data:any)=>{
+  const {getConfig,...other} = data.Config
+  if(getConfig){
+    try {
+      const Config = new Function(`return (${getConfig})`)()({formData:data.formData,editData:data.editData,customData:data.customData})
+      return {
+        ...other,
+        ...Config
+      }
+    } catch (error) {
+      console.log('配置错误: ', error);
+    }
+  }else{
+    return other
+  }
+}
 
 export const transformLayout = <T extends any[],K=T[number]>(layout:T,fn:(item:K,parentLayout?:K)=>any,parentLayout?:K)=>{
   let ret = [];
@@ -20,29 +35,29 @@ export const transformLayout = <T extends any[],K=T[number]>(layout:T,fn:(item:K
   }
   return ret
 }
+
 export const prefix = 'editId'  
 export const renderFn = (data:{
   editData:any,
+  customData:any,
   Components:any,
   edit:boolean
 }) => (v:any)=>{
   const current = data.editData.components[v.key]
   const Component = data.Components[current.key]
   const deepLayoutChildrenRender = ()=>{
-    if(Component.config?.children){
-      const children = v.children||[]
-      let ret:any = {}
-      if(Component.config.children.deep){
-        children.forEach((item:any)=>{
-          ret[item.key] = transformLayout(item.children,renderFn(data))
-        })
-      }else{
-        ret = transformLayout(children,renderFn(data))
-      }
-      return ret
+    const children = v.children||[]
+    let ret:any = null
+    if(children[0]&&!data.editData.components[children[0].key]){
+      // 虚拟层处理
+      ret = {}
+      children.forEach((item:any)=>{
+        ret[item.key] = transformLayout(item.children,renderFn(data))
+      })
     }else{
-      return null
+      ret = transformLayout(children,renderFn(data))
     }
+    return ret
   }
   return (
     <>

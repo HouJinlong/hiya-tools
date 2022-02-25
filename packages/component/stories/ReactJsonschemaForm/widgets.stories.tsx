@@ -173,3 +173,33 @@ SizeInput.args = {
     },
 };
 
+
+export const TextareaWidget = Template.bind({});
+
+TextareaWidget.args = {
+    schema: {
+      type: 'object',
+      properties: {
+        text: {
+          type: 'string',
+          title: '文本',
+          default: '占位文本',
+        },
+      },
+    },
+    uiSchema: {
+      text: {
+        'ui:widget': 'textarea',
+        'ui:options':{
+          rows:'4',
+          style:{
+            direction: 'rtl'
+          }
+        }
+      },
+    },
+    formData: {
+    },
+};
+
+
