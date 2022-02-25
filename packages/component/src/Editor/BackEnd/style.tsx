@@ -7,9 +7,6 @@ export const Box = styled.div`
 `
 export const EditBox = styled.div`
   flex: 1; 
-  display: flex;
-  align-items: center;
-  justify-content: center;
   width: 100%;
   overflow: auto;
 `
@@ -18,7 +15,7 @@ export const EditBoxIframe = styled.iframe`
   height: 667px;
   display: block;
   flex-shrink: 0;
-  margin: 20px;
+  margin: 20px auto;
   border: 0;
 `
 
