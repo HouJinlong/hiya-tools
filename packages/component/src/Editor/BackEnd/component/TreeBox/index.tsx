@@ -19,6 +19,7 @@ export function TreeBox() {
         ret.disabled = true
         if(parentLayout){
           const parentEditComponent = getComponentById(parentLayout.key)
+          ret.key=`${parentLayout.key}.${item.key}`
           let getName = parentEditComponent?.component.children?.getName
           if(getName){
             ret.title = getName(item.key)
@@ -36,6 +37,7 @@ export function TreeBox() {
         }
     }
   },[])
+  console.log(treeData);
   return treeData.length ? (
     <Tree  blockNode treeData={treeData} defaultExpandAll  selectedKeys={GlobalData.selectComponentId?[GlobalData.selectComponentId]:[]} onSelect={TreeEvent.onSelect} />
   ) : (
