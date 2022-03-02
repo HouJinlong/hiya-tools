@@ -143,7 +143,6 @@ const FontSchema = {
     lineHeight: {
       type: 'string',
       title: '字体-行高',
-      default:'120%'
     },
     textAlign: {
       type: 'string',
@@ -225,7 +224,7 @@ const BgSchema = {
             backgroundSize:{
               type: 'string',
               title: '背景-尺寸',
-              default:'cover'
+              default:'100% 100%'
             },
             backgroundPosition:{
               type: 'string',
@@ -286,11 +285,8 @@ const BgSchema = {
       }
     },
     backgroundSize: {
-      'ui:widget': 'BackgroundSizeInput',
     },
-    backgroundPosition:{
-
-    }
+    backgroundPosition:{}
   },
 }
 const schema: any = {

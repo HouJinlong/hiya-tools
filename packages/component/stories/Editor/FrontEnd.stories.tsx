@@ -127,64 +127,77 @@ Default.args = {
       Components:Component.Tab,
       config:{
         name: '选项卡',
-        getConfig:(function (data){
-          console.log('data: ', data);
-          return {
-            schema: {
+        preview:
+          'http://static.ixiaochuan.cn/hiya-version_test/c57fbd56c2c08328f7bb.png',
+        schema: {
+          type: 'object',
+          required: [ 'tabIndex'],
+          properties: {
+            tabIndex: {
+              title: '默认显示第几个选项卡',
+              type: 'string',
+              default: '0',
+            },
+            TabsStyle: {
               type: 'object',
-              required: ['tab','tabIndex'],
-              properties: {
-                "tab": {
-                  "type": "array",
-                  "title": "选项卡文案"+data.formData.tabIndex,
-                  "items": {
-                    "type": "string",
+              title: '选项卡样式',
+            },
+            TabsItemStyle: {
+              type: 'object',
+              title: '选项卡项正常样式',
+            },
+            TabsItemActiveStyle: {
+              type: 'object',
+              title: '选项卡项选中样式',
+            },
+            TabsAndStyles: {
+              type: 'array',
+              title: '选项卡项',
+              items: {
+                type: 'object',
+                properties: {
+                  text: {
+                    title: '文案',
+                    type: 'string',
+                  },
+                  ActiveStyle: {
+                    title: '选中时样式',
+                    type: 'string',
                   },
                 },
-                "tabIndex": {
-                  "title": "默认显示第几个选项卡",
-                  "type": "string",
-                   default:'0',
-                },
-                TabsStyle:{
-                  type:'object',
-                  title:'选项卡样式'
-                },
-                TabsItemStyle:{
-                  type:'object',
-                  title:'选项卡正常样式'
-                },
-                TabsItemActiveStyle:{
-                  type:'object',
-                  title:'选项卡选中样式'
-                }
               },
-            },
-            uiSchema:{
-              "TabsStyle":{
-                "ui:field": "StyleSetter"
-              },
-              "TabsItemStyle":{
-                "ui:field": "StyleSetter"
-              },
-              "TabsItemActiveStyle":{
-                "ui:field": "StyleSetter"
-              }
-            },
-            formData:{
-              tab:[
-                "选项卡1",
-                "选项卡2"
-              ]
-            },
-            children:{
-              deep:data.formData.tabIndex,
-              getName:(e)=>{
-                return data.formData.tab[e]
-              }
             }
+          },
+        },
+        uiSchema: {
+          TabsStyle: {
+            'ui:field': 'StyleSetter',
+          },
+          TabsItemStyle: {
+            'ui:field': 'StyleSetter',
+          },
+          TabsItemActiveStyle: {
+            'ui:field': 'StyleSetter',
+          },
+          TabsAndStyles: {
+            items: {
+              ActiveStyle: {
+                'ui:field': 'StyleSetter',
+              },
+            },
+          },
+        },
+        formData: {},
+        getConfig : ((data) => {
+          return {
+            children: {
+              deep: data.formData.tabIndex,
+              getName:  (e) => {
+                return data.formData.TabsAndStyles[e].text
+              },
+            },
           }
-        }).toString()
+        }).toString(),
       }
     })
   },   

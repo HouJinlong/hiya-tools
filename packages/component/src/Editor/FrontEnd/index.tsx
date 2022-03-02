@@ -2,17 +2,17 @@ import React, { useCallback, useContext, useEffect ,useState,useRef} from 'react
 import {
   useEditorContext,
   EditorContext,
-  deepLayout
 } from '../EditorContext';
-import { icons } from '../icons';
+import { icons } from './icons';
 import {prefix } from '../tool';
 import { RenderView } from '../RenderView/index';
 import * as Style from './style';
-import { v4 as uuid } from 'uuid';
+
 
 
 
 const EditWarp = () => {
+  
   const { GlobalData, Action } =
     useContext(EditorContext);
   const boxRef = useRef<HTMLDivElement>(null) 
@@ -56,66 +56,16 @@ const EditWarp = () => {
       return getRect(GlobalData.selectComponentId&&document.querySelector('#'+prefix+GlobalData.selectComponentId)?.nextElementSibling)
     })
   },[GlobalData,getRect])
-  // 复制粘贴
+  // 粘贴
   useEffect(()=>{
-    const EventMap:any = {
-      copy:(event:any) => {
-        deepLayout(GlobalData.editData.layout,({item:layoutData})=>{
-          if(layoutData.key===GlobalData.selectComponentId){
-            let copyLayout:any = JSON.parse(JSON.stringify(layoutData))
-            let copyComponents:any = {}
-            deepLayout([copyLayout],({item})=>{
-              const components = GlobalData.editData.components[item.key]
-              if(components){
-                let copyComponent = JSON.parse(JSON.stringify(components))
-                copyComponents[item.key] = copyComponent
-              }
-            })
-            event.clipboardData.setData('text/plain', JSON.stringify({
-              copyComponents,
-              copyLayout
-            }));
-            event.preventDefault();
-            event.stopPropagation();
-          }
-        })
-      },
-      paste:(e:any)=>{
-        let paste = (e.clipboardData || (window as any).clipboardData).getData('text/plain');
-        try {
-          let {copyComponents,copyLayout} = JSON.parse(paste)
-          if(copyComponents&&copyLayout){
-            let newCopyComponents:any = {}
-            deepLayout([copyLayout],({item}:any)=>{
-              const components = copyComponents[item.key]
-              if(components){
-                const id = uuid()
-                let copyComponent = JSON.parse(JSON.stringify(components))
-                copyComponent.id = id;
-                newCopyComponents[id] = copyComponent
-                item.key = id
-              }
-            })
-            Action.add({
-              components:newCopyComponents,
-              layout:copyLayout
-            })
-          }
-        } catch (error) {
-          console.log('error: ', error);
-        }
-      }
+    const fn = (e:any)=>{
+      Action.paste((e.clipboardData || (window as any).clipboardData).getData('text/plain'))
     }
-    Object.keys(EventMap).forEach(v=>{
-      window.addEventListener(v,EventMap[v]);
-    })
-   
+    document.addEventListener('paste',fn)
     return ()=>{
-      Object.keys(EventMap).forEach(v=>{
-        window.removeEventListener(v,EventMap[v]);
-      })
+      document.removeEventListener('paste',fn)
     }
-  },[GlobalData])
+  },[Action.paste])
   return  <Style.ActionBox ref={boxRef}>
     {
       rect&&(
@@ -123,21 +73,30 @@ const EditWarp = () => {
             style={rect}
           >
            <Style.BoxActive></Style.BoxActive>
-            <Style.OperationBox>
-              {[
-                {
-                  icon: icons.delete,
-                  fn: () => {
-                    Action.delete(GlobalData.selectComponentId)
-                  },
-                },
-              ].map((v,i) => {
-                return (
-                  <Style.OperationBoxItem onClick={v.fn} key={i}>
-                    {v.icon}
-                  </Style.OperationBoxItem>
-                );
-              })}
+            <Style.OperationBox style={
+              parseInt(rect.top)>300?{
+                bottom:'100%'
+              }:{
+                top:'100%'
+              }
+            }>
+              {
+                GlobalData.copyStr?<Style.OperationBoxItem  onClick={() => {
+                  Action.paste(GlobalData.copyStr)
+               }} >
+                   {icons.paste}
+               </Style.OperationBoxItem>:null
+              }
+              <Style.OperationBoxItem  onClick={() => {
+                  Action.copy()
+              }} >
+                  {icons.copy}
+              </Style.OperationBoxItem>
+              <Style.OperationBoxItem onClick={() => {
+                Action.delete(GlobalData.selectComponentId)
+              }} >
+                  {icons.delete}
+              </Style.OperationBoxItem>
             </Style.OperationBox>
         </Style.Box>
       )

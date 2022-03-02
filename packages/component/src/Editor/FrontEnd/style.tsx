@@ -26,21 +26,22 @@ export const BoxActive = styled.div`
 `
 
 export const OperationBox =  styled.div`
+    display: flex;
     position:absolute;
-    right:0;
-    top:50%;
-    transform:translateY(-50%);
+    left: 50%;
+    transform:translateX(-50%);
     z-index:2;
     pointer-events:all;
 `
 
 
 export const OperationBoxItem = styled.div`
-    width:40px;
-    height:40px;
+    width:30px;
+    height:30px;
     display:flex;
     align-items:center;
     justify-content:center;
+    border: 1px solid red;
     cursor:pointer;
     background:#fff;
     opacity:.8;

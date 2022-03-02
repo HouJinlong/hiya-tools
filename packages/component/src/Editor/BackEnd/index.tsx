@@ -57,6 +57,9 @@ export function BackEnd(props: BackEndPropsType) {
           }
         })
       }
+      setGlobalDataSync('copyStr',(pre:any)=>{
+        return pre
+      })
       setIsInit((e)=>e+1)
     }
     

@@ -3,7 +3,7 @@ import { InputNumber } from 'antd';
 const takeNumber = (value: any) => {
   const num = String(value)
     .trim()
-    .replace(/[^\d\.]+/, '');
+    .replace(/[^\d\.\-]+/, '');
   if (num === '') return;
   return Number(num);
 };
@@ -23,6 +23,8 @@ const createUnitType = (type: string) => {
     },
   };
 };
+
+
 
 const createSpecialSizeOption = (type: string) => ({
   type: type,

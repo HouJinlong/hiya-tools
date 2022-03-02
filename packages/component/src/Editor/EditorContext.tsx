@@ -1,4 +1,6 @@
 import React, { useMemo,useEffect, useRef, useState, useCallback  } from 'react';
+import { v4 as uuid } from 'uuid';
+import copy from 'copy-to-clipboard';
 import { getComponentConfig } from './tool';
 export interface ComponentType {
   key: string;
@@ -108,6 +110,7 @@ export function useEditorContext(
     selectComponentId:useState(''),
      // 编辑信息 组件配置数据 + 布局
     customData:useState<any>({}),
+    copyStr:useState(''),
   }
  
   // iframe 消息通信
@@ -190,19 +193,16 @@ export function useEditorContext(
     }
   }
    // 同步修改
-   const GlobalData ={
-    'editData':GlobalDataState.editData[0],
-    'components':GlobalDataState.components[0],
-    'selectComponentId':GlobalDataState.selectComponentId[0],
-    'customData':GlobalDataState.customData[0],
-  }
-  for(let key in GlobalDataState){
+   const GlobalData:any = {}
+  for(let _key  in GlobalDataState){
+    const key = _key as keyof typeof GlobalDataState
+    GlobalData[key] = GlobalDataState[key][0]
     useEffect(()=>{
       const fn = (data:any)=>{
         if(key==='editData'&&iframe.current){
           editDataChange(data)
         }
-        GlobalDataState[key as keyof typeof GlobalDataState][1](data)
+        GlobalDataState[key][1](data)
       }
       publisher.subscribe(fn,key);
       return ()=>{
@@ -340,9 +340,58 @@ export function useEditorContext(
           }
         })
       },
+      copy(){
+        deepLayout(GlobalData.editData.layout,({item:layoutData})=>{
+          if(layoutData.key===GlobalData.selectComponentId){
+            let copyLayout:any = JSON.parse(JSON.stringify(layoutData))
+            let copyComponents:any = {}
+            deepLayout([copyLayout],({item})=>{
+              const components = GlobalData.editData.components[item.key]
+              if(components){
+                let copyComponent = JSON.parse(JSON.stringify(components))
+                copyComponents[item.key] = copyComponent
+              }
+            })
+            const str = JSON.stringify({
+              copyComponents,
+              copyLayout
+            })
+            setGlobalDataSync('copyStr',()=>str)
+            copy(str)
+          }
+        })
+      },
+      paste(data:any){
+        try {
+          let {copyComponents,copyLayout} = JSON.parse(data)
+          if(copyComponents&&copyLayout){
+            let newCopyComponents:any = {}
+            deepLayout([copyLayout],({item}:any)=>{
+              const components = copyComponents[item.key]
+              if(components){
+                const id = uuid()
+                let copyComponent = JSON.parse(JSON.stringify(components))
+                copyComponent.id = id;
+                newCopyComponents[id] = copyComponent
+                item.key = id
+              }
+            })
+            Action.add({
+              components:newCopyComponents,
+              layout:copyLayout
+            })
+            setTimeout(()=>{
+              setGlobalDataSync('copyStr',()=>"")
+              copy('clear')
+            },0)
+          }
+        } catch (error) {
+          console.log('error: ', error);
+        }
+      }
     }
   },[select,setGlobalDataSync])
-
+  
   return {
     publisher,
     GlobalData,
