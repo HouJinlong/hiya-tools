@@ -147,7 +147,6 @@ const FontSchema = {
     textAlign: {
       type: 'string',
       title: '字体-对齐',
-      default:'center'
     },
   },
   uiSchema:{

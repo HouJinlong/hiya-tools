@@ -6,7 +6,7 @@ export interface ImageProps{
 }
 export const ImageDefaultProps={
   width:'100%',
-  height:'auto',
+  height:'inherit',
   src: 'http://static.ixiaochuan.cn/hiya-version_test/c57fbd56c2c08328f7bb.png'
 }
 export function Image(props:ImageProps) {

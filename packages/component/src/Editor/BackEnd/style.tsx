@@ -31,4 +31,7 @@ export const scrollBox= styled.div`
       overflow: auto;
     }
   }
+  .ant-tree-title{
+    word-break: keep-all;
+  }
 `
