@@ -7,6 +7,7 @@ export const ActionBox =styled.div`
     width:100%;
     height:100%;
     pointer-events:none;
+    z-index: 99999;
 `;
 export const Box = styled.div`
     position:absolute;
