@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from 'react';
+import React, { useContext, useEffect, useMemo } from 'react';
 import { Tree, Empty } from 'antd';
 import { EditorContext } from '../../../EditorContext';
 import {  transformLayout} from '../../../tool';
@@ -37,6 +37,14 @@ export function TreeBox() {
         }
     }
   },[])
+  useEffect(()=>{
+    setTimeout(() => {
+      const selected =  document.querySelector('.ant-tree-node-selected')
+      if(selected){
+        selected.scrollIntoView({behavior: "smooth", block: "center", inline: "center"})
+      }
+    }, 100);
+  },[GlobalData.selectComponentId])
   console.log(treeData);
   return treeData.length ? (
     <Tree  blockNode treeData={treeData} defaultExpandAll  selectedKeys={GlobalData.selectComponentId?[GlobalData.selectComponentId]:[]} onSelect={TreeEvent.onSelect} />
