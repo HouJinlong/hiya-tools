@@ -115,6 +115,10 @@ ImageInput.args = {
             type: 'string',
             title: 'css图片地址',
           },
+          accept: {
+            type: 'string',
+            title: 'accept .zip',
+          }, 
       },
     },
     uiSchema: {
@@ -126,6 +130,12 @@ ImageInput.args = {
       },
       CssImageInput: {
         'ui:widget': 'CssImageInput',
+      },
+      accept: {
+        'ui:widget': 'ImageInput',
+        UploadProps:{
+          accept:'.zip',
+        }
       },
     },
     formData: {

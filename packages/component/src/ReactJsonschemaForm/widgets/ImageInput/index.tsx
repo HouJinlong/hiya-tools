@@ -4,7 +4,10 @@ import * as Style from './style';
 import {WidgetProps} from '@rjsf/core';
 import { IconWidget } from '../../../IconWidget';
 export const ImageInput: React.FC<WidgetProps> = (props) => {
-  let {customRequest,...otherUploadProps} = props.uiSchema.UploadProps || props.formContext.UploadProps ||{}
+  let {customRequest,...otherUploadProps} = {
+    ...props.formContext.UploadProps,
+    ...props.uiSchema.UploadProps 
+  } as  any
   if(customRequest){
     otherUploadProps['customRequest'] = customRequest(props)
   }
