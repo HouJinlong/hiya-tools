@@ -9,7 +9,7 @@ const {FieldTemplate} = Theme
 type Position = 'top' | 'right' | 'left' | 'bottom' | 'all';
 
 const BoxRex =
-  /([\d\.]+[^\d\s\.+-]+)(?:\s+([\d\.]+[^\d\s\.+-]+)(?:\s+([\d\.]+[^\d\s\.+-]+)(?:\s+([\d\.]+[^\d\s\.+-]+))?)?)?/;
+  /([\d\.\-]+[^\d\s\.\-]+)(?:\s+([\d\.\-]+[^\d\s\.+-]+)(?:\s+([\d\.\-]+[^\d\s\.+-]+)(?:\s+([\d\.\-]+[^\d\s\.+-]+))?)?)?/;
 const PositionMap = {
   top: 1,
   right: 2,
