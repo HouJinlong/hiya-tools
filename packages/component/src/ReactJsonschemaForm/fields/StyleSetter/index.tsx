@@ -288,6 +288,76 @@ const BgSchema = {
     backgroundPosition:{}
   },
 }
+const PositionSchema = {
+  schema:{
+    position: {
+      type: 'string',
+      title: '定位',
+    },
+    top:{
+      type: 'string',
+      title: '定位-上',
+    },
+    left:{
+      type: 'string',
+      title: '定位-左',
+    },
+    bottom:{
+      type: 'string',
+      title: '定位-下',
+    },
+    right:{
+      type: 'string',
+      title: '定位-右',
+    },
+    zIndex:{
+      type: 'string',
+      title: '定位-层级',
+    },
+  },
+  uiSchema:{
+    position:{
+      'ui:field': 'Select',
+      'ui:options':{
+        labels: [
+          {
+            value: 'static',
+            label: 'static',
+          },
+          {
+            value: 'relative',
+            label: 'relative',
+          },
+          {
+            value: 'absolute',
+            label: 'absolute',
+          },
+          {
+            value: 'fixed',
+            label: 'fixed',
+          },
+          {
+            value: 'sticky',
+            label: 'sticky',
+          }
+        ],
+      }
+    },
+    top: {
+      'ui:widget': 'SizeInput',
+    },
+    left: {
+      'ui:widget': 'SizeInput',
+    },
+    bottom: {
+      'ui:widget': 'SizeInput',
+    },
+    right: {
+      'ui:widget': 'SizeInput',
+    },
+  },
+}
+
 const schema: any = {
   type: 'object',
   required: [],
@@ -308,6 +378,7 @@ const schema: any = {
       type: 'string',
       title: '最小高度',
     },
+    ...PositionSchema.schema,
     ...FlexSchema.schema,
     ...FontSchema.schema,
     ...BgSchema.schema,
@@ -341,7 +412,7 @@ const schema: any = {
   }
 };
 const uiSchema:FormProps<any>['uiSchema'] = {
-  "ui:order":['width', 'height', 'minWidth', 'minHeight', ...Object.keys(FlexSchema.schema), ...Object.keys(FontSchema.schema),...Object.keys(BgSchema.uiSchema),'margin', 'padding', 'borderWidth', 'borderColor', 'borderStyle', 'borderRadius'],
+  "ui:order":['width', 'height', 'minWidth', 'minHeight',...Object.keys(PositionSchema.schema), ...Object.keys(FlexSchema.schema), ...Object.keys(FontSchema.schema),...Object.keys(BgSchema.uiSchema),'margin', 'padding', 'borderWidth', 'borderColor', 'borderStyle', 'borderRadius'],
   width: {
     'ui:widget': 'SizeInput',
   },
@@ -354,6 +425,7 @@ const uiSchema:FormProps<any>['uiSchema'] = {
   minHeight: {
     'ui:widget': 'SizeInput',
   },
+  ...PositionSchema.uiSchema,
   ...FlexSchema.uiSchema,
   ...FontSchema.uiSchema,
   ...BgSchema.uiSchema,

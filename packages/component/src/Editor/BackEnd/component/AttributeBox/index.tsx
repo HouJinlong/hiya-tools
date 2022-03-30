@@ -10,6 +10,7 @@ export function AttributeBox(props:BackEndPropsType) {
     <Style.AttributeBox>
       {select?(
         <Form
+          key={select.editComponent.id}
           schema={select.component.schema}
           uiSchema={select.component.uiSchema}
           showErrorList={false}
