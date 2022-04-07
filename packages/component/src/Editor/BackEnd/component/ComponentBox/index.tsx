@@ -9,6 +9,7 @@ export function ComponentBox() {
   return (
     <Style.ComponentBox>
       {Object.values(GlobalData?.components || {}).map((v)=>getComponentConfig({
+        CustomComponents:GlobalData.CustomComponents,
         Config:v,
         formData:{},
         customData:GlobalData.customData,

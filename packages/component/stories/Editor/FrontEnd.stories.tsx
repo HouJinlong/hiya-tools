@@ -199,7 +199,51 @@ Default.args = {
           }
         }).toString(),
       }
+    }),
+    CustomComponent:getComponents({
+      Components:Component.CustomComponent,
+      config:{
+        name: '自定义组件',
+        getConfig : ((data) => {
+          console.log('data: ', data);
+          return {
+            schema: {
+              type: 'object',
+              required: [],
+              properties: {
+                CustomComponentKey: {
+                  type:'string',
+                  title: '自定义组件',
+                }
+              }
+            },
+            uiSchema: {
+              CustomComponentKey: {
+                'ui:field': 'Select',
+                'ui:options':{
+                  labels: data.CustomComponents,
+                  showSearch:true,
+                  filterOption:(input, option) =>
+                    option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                  
+                }
+              }
+            },
+          }
+        }).toString(),
+        formData: {},
+      }
     })
-  },   
+  }, 
+  CustomComponents:{
+    Test:{
+      name:'测试组件',
+      Component:()=><div>测试组件</div>
+    },
+    Alert:{
+      name:'弹框组件',
+      Component:()=><div>弹框组件</div>
+    }
+  }, 
   Warp
 };

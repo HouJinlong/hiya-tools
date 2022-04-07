@@ -14,7 +14,7 @@ export const getComponentConfig =(data:any)=>{
   const {getConfig,...other} = data.Config
   if(getConfig){
     try {
-      const Config = new Function(`return (${getConfig})`)()({formData:data.formData,editData:data.editData,customData:data.customData})
+      const Config = new Function(`return (${getConfig})`)()({CustomComponents:data.CustomComponents,formData:data.formData,editData:data.editData,customData:data.customData})
       return {
         ...other,
         ...Config
@@ -62,7 +62,7 @@ export const renderFn = (data:{
   return (
     <>
       {data.edit?<input type="hidden" id={prefix+current.id} />:null}
-      <Component {...current.formData} key={current.id} >
+      <Component {...current.formData}   key={current.id} >
         {deepLayoutChildrenRender()}
       </Component>
     </>

@@ -101,6 +101,8 @@ export function useEditorContext(
     components:useState<{
       [key in ComponentType['key']]:ComponentType
     }>({}),
+    // 自定义组件
+    CustomComponents:useState<any>([]),
      // 编辑信息 组件配置数据 + 布局
     editData:useState<EditDataType>({
       components: {},
@@ -229,6 +231,7 @@ export function useEditorContext(
       if(editComponent){
         return {
           component:getComponentConfig({
+            CustomComponents:GlobalData.CustomComponents,
             Config:GlobalData.components[editComponent.key],
             formData:editComponent.formData,
             editData:GlobalData.editData,

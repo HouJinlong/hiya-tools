@@ -121,13 +121,21 @@ export function FrontEnd(props: any) {
       setGlobalDataSync('selectComponentId',()=>{
         return ''
       })
+      setGlobalDataSync('CustomComponents',()=>{
+        return Object.entries(props.CustomComponents).map((v:any)=>{
+          return {
+            value:v[0],
+            label:v[1].name
+          }
+        })
+      })
     },'init')
   },[])
   return (
     <div style={{position: "relative"}}>
       <EditorContext.Provider value={data}>
         <EditWarp></EditWarp>
-        <RenderView editData={editData} customData={customData} Components={props.Components} edit={true}  Warp={props.Warp}/>
+        <RenderView editData={editData} customData={customData} CustomComponents={props.CustomComponents} Components={props.Components} edit={true}  Warp={props.Warp}/>
       </EditorContext.Provider>
     </div>
   );
