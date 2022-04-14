@@ -22,7 +22,10 @@ export function TreeBox() {
           ret.key=`${parentLayout.key}.${item.key}`
           let getName = parentEditComponent?.component.children?.getName
           if(getName){
-            ret.title = getName(item.key)
+            try {
+              ret.title = getName(item.key)
+            } catch (error) {
+            }
           }
         }
       }
