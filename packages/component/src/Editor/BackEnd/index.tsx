@@ -1,8 +1,7 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState } from 'react';
 import { Layout, Card, Button } from 'antd';
 
 import 'antd/dist/antd.css';
-import { useEditorContext, EditorContext } from '../EditorContext';
 import * as Style from './style';
 
 import { ComponentBox } from './component/ComponentBox';
@@ -11,15 +10,7 @@ import { TreeBox } from './component/TreeBox';
 import { ToolBox } from './component/ToolBox';
 import { HistoryBox } from './component/HistoryBox';
 import { IconWidget } from '../../IconWidget';
-export interface BackEndPropsType {
-  iframe: string;
-  data: any;
-  onSave: any;
-  customData:any;
-  onView:any;
-  UploadProps:any
-  ToolBoxSlot:any
-}
+
 const leftSiderButton = {
   Component: {
     title: '组件',
@@ -37,48 +28,26 @@ const leftSiderButton = {
 const leftSiderButtonKeys = Object.keys(
   leftSiderButton
 ) as (keyof typeof leftSiderButton)[];
+
+import { useBackEndEditorContext,BackEndEditorContext } from '../EditorContext';
+import {EditDataType} from '../useEditData'
+export interface BackEndPropsType {
+  iframe: string;
+  defaultData: EditDataType;
+  onSave: any;
+  onView:any;
+  UploadProps:any
+  ToolBoxSlot:any
+  EditDataStateOther:{
+    [key in string]: any;
+  };
+}
 export function BackEnd(props: BackEndPropsType) {
   const iframe = useRef<HTMLIFrameElement>(null);
-  const data = useEditorContext(iframe);
-  const {publisher,editDataHistory,setGlobalDataSync} = data
-  const [isInit,setIsInit] = useState(0)
-  useEffect(()=>{
-    const fn = ()=>{
-      if(editDataHistory.index){
-        setGlobalDataSync('editData',()=>{
-          return JSON.parse(editDataHistory.data[editDataHistory.index-1].data)
-        })
-      }else{
-        setGlobalDataSync('editData',(pre:any)=>{
-          return {
-            ...pre,
-            ...props.data,
-            type:'初始化'
-          }
-        })
-      }
-      setGlobalDataSync('copyStr',(pre:any)=>{
-        return pre
-      })
-      setIsInit((e)=>e+1)
-    }
-    
-    publisher.subscribe(fn,'init')
-    return ()=>{
-      publisher.unsubscribe(fn,'init')
-    }
-  },[editDataHistory])
-  useEffect(()=>{
-    if(isInit){
-      setGlobalDataSync('customData',()=>{
-        return props.customData
-      })
-    }
-  },[isInit,props.customData])
+  const data = useBackEndEditorContext(iframe,props)
   const [leftSider, setLeftSider] = useState(leftSiderButtonKeys[0]);
-  return (
-    <EditorContext.Provider value={data}>
-      <Layout
+  return <BackEndEditorContext.Provider value={data}>
+    <Layout
         style={{
           height: '100%',
         }}
@@ -86,7 +55,7 @@ export function BackEnd(props: BackEndPropsType) {
         <Layout.Sider theme="light">
           <Style.scrollBox>
             <Card title={leftSiderButton[leftSider].title} size="small">
-              {(()=>{
+              {Boolean(data.EditDataState.ComponentsInfo.length)&&(()=>{
                 const Component = leftSiderButton[leftSider].Component
                 return <Component {...(props as any)}></Component>
               })()}
@@ -127,11 +96,6 @@ export function BackEnd(props: BackEndPropsType) {
         >
           <ToolBox {...props}></ToolBox>
           <Style.EditBox
-            style={
-              {
-                // backgroundImage: `url(${phonePng})`,
-              }
-            }
           >
               <Style.EditBoxIframe
                 ref={iframe}
@@ -147,6 +111,6 @@ export function BackEnd(props: BackEndPropsType) {
           </Style.scrollBox>
         </Layout.Sider>
       </Layout>
-    </EditorContext.Provider>
-  );
+  </BackEndEditorContext.Provider>
+ 
 }

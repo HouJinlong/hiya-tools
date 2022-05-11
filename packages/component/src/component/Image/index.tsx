@@ -1,4 +1,5 @@
 import React from 'react'
+import { ComponentType } from '../../Editor/EditorContext';
 export interface ImageProps{
   width:string,
   height:string,
@@ -22,4 +23,40 @@ export function Image(props:ImageProps) {
       alt=""
     />
   )
+}
+
+export const ImageComponent:ComponentType = {
+  name: '图片组件',
+  icon:'https://cdn.jsdelivr.net/gh/HouJinlong/pic@master/2022-04-21/Image.png',
+  Component: Image,
+  schema: {
+    type: 'object',
+    required: ['src'],
+    properties: {
+      width: {
+        type: 'string',
+        title: '宽度',
+      },
+      height: {
+        type: 'string',
+        title: '高度',
+      },
+      src: {
+        type: 'string',
+        title: '图片地址',
+      },
+    },
+  },
+  uiSchema: {
+    width: {
+      'ui:widget': 'SizeInput',
+    },
+    height: {
+      'ui:widget': 'SizeInput',
+    },
+    src: {
+      'ui:widget': 'ImageInput',
+    },
+  },
+  formData:ImageDefaultProps,
 }

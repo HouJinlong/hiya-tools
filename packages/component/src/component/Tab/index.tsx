@@ -1,5 +1,5 @@
 import React, { useEffect, useState,ReactChild} from 'react';
-
+import { ComponentType } from '../../Editor/EditorContext';
 export interface TabProps {
   tabIndex: string;
   children:{
@@ -9,9 +9,10 @@ export interface TabProps {
   TabsItemStyle:React.CSSProperties
   TabsItemActiveIsEqually:boolean
   TabsItemActiveStyle?:React.CSSProperties
-  TabsAndStyles?:Array<{text:string,ActiveStyle:React.CSSProperties}>
+  TabsAndStyles?:Array<{text:string,ActiveStyle:React.CSSProperties,_id:string}>
 }
 export function Tab(props: TabProps) {
+  console.log('props: ', props);
  
   const [tabIndex, setTabIndex] = useState(props.tabIndex);
   useEffect(() => {
@@ -56,8 +57,114 @@ export function Tab(props: TabProps) {
           })
         }
       </div>
-      {props.children[tabIndex]}
+      {props.children[
+        ((props.TabsAndStyles||[])[Number(tabIndex)]?._id||tabIndex ) 
+      ]}
     </>
   );
 }
 
+
+export const TabComponent:ComponentType = {
+  Component:Tab,
+  name: '选项卡',
+  icon:'https://cdn.jsdelivr.net/gh/HouJinlong/pic@master/2022-04-21/tab (1).png',
+  schema: {
+    type: 'object',
+    required: ['tabIndex'],
+    properties: {
+      tabIndex: {
+        title: '默认显示第几个选项卡',
+        type: 'string',
+        default:0,
+      },
+      TabsStyle: {
+        type: 'object',
+        title: '选项卡样式',
+      },
+      TabsItemStyle: {
+        type: 'object',
+        title: '选项卡项正常样式',
+      },
+      TabsItemActiveStyle: {
+        type: 'object',
+        title: '选项卡项选中样式',
+      },
+      TabsAndStyles: {
+        type: 'array',
+        title: '选项卡项',
+        items: {
+          type: 'object',
+          properties: {
+            text: {
+              title: '文案',
+              type: 'string',
+            },
+            ActiveStyle: {
+              title: '选中时样式',
+              type: 'object',
+            },
+          }
+        },
+      },
+    },
+  },
+  uiSchema: {
+    TabsStyle: {
+      'ui:field': 'StyleSetter',
+    },
+    TabsItemStyle: {
+      'ui:field': 'StyleSetter',
+    },
+    TabsItemActiveStyle: {
+      'ui:field': 'StyleSetter',
+    },
+    TabsAndStyles: {
+      items: {
+        ActiveStyle: {
+          'ui:field': 'StyleSetter',
+        },
+      },
+    },
+  },
+  formData: {
+    TabsAndStyles:[
+      {
+        text:'默认文案'
+      },
+      {
+        text:'默认文案1'
+      }
+    ]
+  },
+  getConfig: (data) => {
+    let children = {
+      all:{},
+      current:""
+    }
+    if(data.formData.TabsAndStyles){
+      const isModify = data.formData?._TabsAndStyles?.length=== data.formData.TabsAndStyles.length
+      data.formData.TabsAndStyles = data.formData.TabsAndStyles.map((v,i)=>{
+        if(!v._id){
+          if(isModify){
+            // 纯修改
+            v._id = data.formData._TabsAndStyles[i]._id
+          }else{
+            // 添加
+            v._id=data.uuid()
+          }
+        }
+        children.all[v._id] = v.text
+        if(Number(data.formData.tabIndex) === i){
+          children.current = v._id
+        }
+        // 排序
+        return v
+      })
+      data.formData._TabsAndStyles = data.formData.TabsAndStyles
+    }
+    return {
+      children,
+    };
+  },
+}

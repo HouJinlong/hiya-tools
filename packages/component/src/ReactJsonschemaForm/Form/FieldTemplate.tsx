@@ -9,6 +9,6 @@ export default function(props:FieldTemplateProps<any>){
         const CustomFieldTemplate = fields[fieldKey] as  any
         return <CustomFieldTemplate {...props} />
     }else{
-        return <FieldTemplate {...props} />
+        return <FieldTemplate {...props}  />
     }
 }

@@ -1,12 +1,12 @@
 import React, { useContext,useState} from 'react';
 import ReactQr from 'react-awesome-qr'
-import { EditorContext } from '../../../EditorContext';
+import { BackEndEditorContext } from '../../../EditorContext';
 import { Space, Button,Modal,Input} from 'antd';
 import { IconWidget } from '../../../../IconWidget';
 import { BackEndPropsType } from '../../index';
 
 export function ToolBox(props: BackEndPropsType) {
-  const data = useContext(EditorContext);
+  const data = useContext(BackEndEditorContext);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [view,setView] = useState(props.onView())
   return (
@@ -49,7 +49,7 @@ export function ToolBox(props: BackEndPropsType) {
             <Button
             icon={<IconWidget icon="Save" title="保存"></IconWidget>}
             onClick={() => {
-              props.onSave(data.GlobalData.editData);
+              props.onSave(data.EditDataState);
             }}
           >
           </Button>

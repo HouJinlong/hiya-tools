@@ -16,11 +16,11 @@ export const DatePicker = (props:FieldTemplateProps<any>) => {
         style={{
           width: '100%',
         }}
-        defaultValue={props.formData && moment(props.formData)}
         onChange={(m, s) => {
           props.onChange(valueFormat ? m?.format(valueFormat) : s);
         }}
         {...options}
+        defaultValue={props.formData && moment(props.formData)}
       />
     </FieldTemplate>
   );
@@ -37,13 +37,13 @@ export const RangePicker = (props:FieldTemplateProps<any>) => {
         style={{
           width: '100%',
         }}
-        defaultValue={(props.formData || []).map((v: any) => moment(v))}
         onChange={(m, s) => {
           props.onChange(
             valueFormat ? m?.map((v:any) => v.format(valueFormat)) : s
           );
         }}
         {...options}
+        defaultValue={(props.formData || []).map((v: any) => moment(v))}
       />
     </FieldTemplate>
   );

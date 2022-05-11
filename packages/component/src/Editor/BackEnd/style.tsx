@@ -9,6 +9,9 @@ export const EditBox = styled.div`
   flex: 1; 
   width: 100%;
   overflow: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `
 export const EditBoxIframe = styled.iframe`
   width: 375px;

@@ -13,6 +13,7 @@
     "rootDir": "./src",
     // stricter type-checking for stronger correctness. Recommended by TS
     "strict": true,
+    "noImplicitAny": false,
     // linter checks for common issues
     "noImplicitReturns": false,
     "noFallthroughCasesInSwitch": true,

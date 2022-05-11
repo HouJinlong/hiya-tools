@@ -1,46 +1,47 @@
 import React, { useContext } from 'react';
-import { EditorContext, ComponentType } from '../../../EditorContext';
 import { utils } from '@rjsf/core';
 import * as Style from './style';
 import { v4 as uuid } from 'uuid';
-import { getComponentConfig } from '../../../tool';
+import { getComponentInfo } from '../../../useEditData';
+import { BackEndEditorContext } from '../../../EditorContext';
 export function ComponentBox() {
-  const { GlobalData, Action } = useContext(EditorContext);
+  const { EditDataState, EditDataDispatch } =
+    useContext(BackEndEditorContext);
   return (
     <Style.ComponentBox>
-      {Object.values(GlobalData?.components || {}).map((v)=>getComponentConfig({
-        CustomComponents:GlobalData.CustomComponents,
-        Config:v,
-        formData:{},
-        customData:GlobalData.customData,
-        editData:GlobalData.editData
-      })).map((v) => {
+      {(EditDataState?.ComponentsInfo || []).map((v) => {
         return (
           <Style.ComponentBoxItem
             key={v.key}
             onClick={() => {
               const id = uuid();
-              const data: ComponentType = JSON.parse(JSON.stringify(v));
-              Action.add({
-                components:{
-                  [id]:{
-                    id,
-                    formData: utils.getDefaultFormState(
-                      data.schema,
-                      data.formData
-                    ),
-                    key:data.key
-                  }
+              const data = getComponentInfo({
+                EditDataState,
+                componentInfo:JSON.parse(JSON.stringify(v)),
+                formData:v.formData
+              }) 
+              EditDataDispatch({
+                type: 'add',
+                data: {
+                  components: {
+                    [id]: {
+                      id,
+                      formData: utils.getDefaultFormState(
+                        data.schema,
+                        data.formData
+                      ),
+                      key: data.key,
+                    },
+                  },
+                  layout: {
+                    key: id,
+                    children: [],
+                  },
                 },
-                layout:{
-                  key:id,
-                  children:[]
-                }
-              })
-              Action.select(id)
+              });
             }}
           >
-            {v.preview?<Style.ComponentBoxImg src={v.preview} />:null}
+            {v.icon&&<Style.ComponentBoxImg src={v.icon} />}
             <div>{v.name}</div>
           </Style.ComponentBoxItem>
         );

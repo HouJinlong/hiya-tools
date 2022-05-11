@@ -1,35 +1,45 @@
 import React, { useContext } from 'react';
-import { EditorContext } from '../../../EditorContext';
 import { Empty } from 'antd';
 import * as Style from './style';
 import { Form } from '../../../../ReactJsonschemaForm';
 import { BackEndPropsType } from '../../index';
-export function AttributeBox(props:BackEndPropsType) {
-  const {Action,select} = useContext(EditorContext);
+import { BackEndEditorContext } from '../../../EditorContext';
+export function AttributeBox(props: BackEndPropsType) {
+  const { selectInfo, EditDataDispatch } = useContext(BackEndEditorContext);
   return (
     <Style.AttributeBox>
-      {select?(
+      {selectInfo ? (
         <Form
-          key={select.editComponent.id}
-          schema={select.component.schema}
-          uiSchema={select.component.uiSchema}
+          key={selectInfo.data.id}
+          schema={selectInfo.componentInfo.schema}
+          uiSchema={selectInfo.componentInfo.uiSchema}
           showErrorList={false}
-          formData={select.editComponent.formData}
+          formData={selectInfo.data.formData}
           formContext={{
             UploadProps: props.UploadProps,
           }}
-          onChange={(e)=>{
-            if(e.errors.length==0){
-              if(JSON.stringify(select.editComponent.formData)!==JSON.stringify(e.formData)){
-                Action.update({
-                  ...select.editComponent,
-                  formData: e.formData,
-                })
+          onChange={(e) => {
+            if (e.errors.length == 0) {
+              if (
+                JSON.stringify(selectInfo.data.formData) !==
+                JSON.stringify(e.formData)
+              ) {
+                EditDataDispatch({
+                  type: 'update',
+                  data: {
+                    ...selectInfo.data,
+                    formData: e.formData,
+                  },
+                });
               }
             }
           }}
-        ><div></div></Form>
-      ):<Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="暂无内容" />}
+        >
+          <div></div>
+        </Form>
+      ) : (
+        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="暂无内容" />
+      )}
     </Style.AttributeBox>
   );
 }

@@ -30,7 +30,7 @@ export function createLang({dataUrl,data}:CreateLangArgument){
             header: true,
             complete: (results)=>{
                 const xlsxData = results.data
-                if(xlsxData[0][config.key]){
+                if(Object.keys(xlsxData[0]).includes(config.key)){
                     console.log(chalk.bold.green('读取成功'));
                     console.log('正在生成语言包...');
                     // 生成json
@@ -75,7 +75,7 @@ export function createLangFile(data,lang){
     }
     let fileData = {}
     data.forEach(v => {
-        if(!fileData[v[config.key]]){
+        if(v[config.key]&&!fileData[v[config.key]]){
             const value = String(v[langXlsxKey])
             if(value){
                 fileData[v[config.key]]= config.placeholder===value?'':value

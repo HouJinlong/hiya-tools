@@ -7,7 +7,7 @@ export const ComponentBox =styled.div`
 `
 export const ComponentBoxItem =styled.div`
   width: 80px;
-  height: 84px;
+  min-height: 84px;
   border: 1px solid #ddd;
   border-radius: 5px;
   text-align: center;
@@ -19,7 +19,6 @@ export const ComponentBoxItem =styled.div`
   flex-direction: column;
 `
 export const ComponentBoxImg = styled.img`
-  width: 100%;
-  height: 60px;
+  height: 40px;
   display: block;
 `
