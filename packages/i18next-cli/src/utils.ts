@@ -68,11 +68,6 @@ export function createLang({dataUrl,data}:CreateLangArgument){
 }
 export function createLangFile(data,lang){
     const langXlsxKey = config.xlsxKeyMap[lang]
-    if(!data[0][langXlsxKey]){
-        console.log(data[0][langXlsxKey]);
-        console.log(chalk.bold.yellow(`该xlxs缺少 ${langXlsxKey}`));
-        return
-    }
     let fileData = {}
     data.forEach(v => {
         if(v[config.key]&&!fileData[v[config.key]]){
