@@ -2,10 +2,10 @@ import chalk from 'chalk';
 import fs from 'fs';
 import { json } from 'stream/consumers';
 import { config } from '../config';
-import {createLang} from '../utils'
+import {createLangForUrl,createLangForXlsx} from '../utils'
 import shimsAst from '../ast/shims';
 import inquirer from 'inquirer';
-export default function (){
+export default function (options){
     const AllNamespac = shimsAst.getAllNamespace()
     const questions = [
     {
@@ -57,23 +57,30 @@ export default function (){
    ];
     
     inquirer.prompt(questions).then((answers) => {
-        console.log('正在读取数据...');
-        createLang({
-            dataUrl:answers.data,
-            data:{
-                defaultNS:answers.name,
-                configStr:`
-                const config = {
-                    url: '${answers.url}',
-                    data: '${answers.data}',
-                    typeLang:${answers.fallbackLng},
-                    initOptions: {
-                      fallbackLng: '${answers.fallbackLng}',
-                    },
-                  }
-                `,
-
-            }
-        })
+        console.log('answers: ', answers);
+        const data = {
+            defaultNS:answers.name,
+            configStr:`
+            const config = {
+                url: '${answers.url}',
+                data: '${answers.data}',
+                typeLang:${answers.fallbackLng},
+                initOptions: {
+                  fallbackLng: '${answers.fallbackLng}',
+                },
+              }
+            `,
+        }
+        if(options.xlsx){
+            createLangForXlsx({
+                xlsx:options.xlsx,
+                data
+            })
+        }else{
+            createLangForUrl({
+                dataUrl:answers.data,
+                data,
+            })
+        }
     });
 } 

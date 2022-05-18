@@ -84,25 +84,30 @@ xci18n init
 6. 将`谷歌文档的共享地址`交给产品和翻译同学编辑
    ![https://cdn.jsdelivr.net/gh/HouJinlong/pic@master/2022-01-07/20220107161232.png](https://cdn.jsdelivr.net/gh/HouJinlong/pic@master/2022-01-07/20220107161232.png)
 
-### 4. xlsx转语言包
+### 4. 生成语言包
 
 
 ```
-config: /Users/zuiyou/work/hiya/xci18next.json
+config: /Users/zuiyou/work/hiya-tools/packages/i18next-cli/example/xci18next.json
 Usage: @xc/i18next-cli create [options]
 
 根据配置创建语言包
 
 Options:
-  -h, --help  display help for command
+  -x, --xlsx <xlsxFile>  使用xlsx文件更新
+  -h, --help             display help for command
 ```
 > 例如 
 
 ```
- xci18n create 
+ // 以文档发布数据生成
+ xci18n create  
+ // 以参数 -x 传入的xlsx生成
+ xci18n create -x ./主播任务翻译key文档.xlsx 
 ```
 
 ![https://cdn.jsdelivr.net/gh/HouJinlong/pic@master/2022-01-07/20220107161329.png](https://cdn.jsdelivr.net/gh/HouJinlong/pic@master/2022-01-07/20220107161329.png)
+![https://cdn.jsdelivr.net/gh/HouJinlong/pic@master/2022-05-18/20220518104942.png](https://cdn.jsdelivr.net/gh/HouJinlong/pic@master/2022-05-18/20220518104942.png)
 
 1. `shims.i18next.d.ts` 导入声明
 2. 生成语言包文件
@@ -132,21 +137,26 @@ xci18n xlsx ./i18n/index.ts
 ### 6. 更新已有语言包
 
 ```
-config: /Users/zuiyou/work/hiya/xci18next.json
+config: /Users/zuiyou/work/hiya-tools/packages/i18next-cli/example/xci18next.json
 Usage: @xc/i18next-cli update [options] <langFileIndex>
 
 更新指定语言包
 
 Arguments:
-  langFileIndex  语言包index.ts的路径
+  langFileIndex          语言包index.ts的路径
 
 Options:
-  -h, --help     display help for command
+  -x, --xlsx <xlsxFile>  使用xlsx文件更新
+  -h, --help             display help for command
 
 ```
 > 例如
 
 ```
+ // 以文档发布数据更新
 xci18n update ./i18n/index.ts
+ // 以参数 -x 传入的xlsx更新
+xci18n update ./i18n/index.ts -x ./主播任务翻译key文档.xlsx
 ```
 ![https://cdn.jsdelivr.net/gh/HouJinlong/pic@master/2022-01-07/20220107162142.png](https://cdn.jsdelivr.net/gh/HouJinlong/pic@master/2022-01-07/20220107162142.png)
+![https://cdn.jsdelivr.net/gh/HouJinlong/pic@master/2022-05-18/20220518105211.png](https://cdn.jsdelivr.net/gh/HouJinlong/pic@master/2022-05-18/20220518105211.png)

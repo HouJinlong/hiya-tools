@@ -19,12 +19,14 @@ program
 program
     .command('create')
     .description('根据配置创建语言包')
+    .option('-x, --xlsx <xlsxFile>', '使用xlsx文件更新')
     .action(create);   
 
 program
     .command('update')
     .description('更新指定语言包')
     .argument('<langFileIndex>', '语言包index.ts的路径')
+    .option('-x, --xlsx <xlsxFile>', '使用xlsx文件更新')
     .action(update); 
 
 program
