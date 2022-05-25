@@ -15,8 +15,10 @@ export const ComponentBoxItem =styled.div`
   margin-bottom:10px;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-around;
   flex-direction: column;
+  font-size: 12px;
+  line-height: 14px;
 `
 export const ComponentBoxImg = styled.img`
   height: 40px;

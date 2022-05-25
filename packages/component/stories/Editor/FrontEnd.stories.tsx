@@ -28,6 +28,7 @@ const Template: Story<any> = (args) => (
         Image: Component.ImageComponent,
         Text:Component.TextComponent,
         Tab: Component.TabComponent,
+        TabV1: Component.TabV1Component,
         CustomComponent: Component.CustomComponent,
       }}
       Warp={Warp}

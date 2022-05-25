@@ -26,7 +26,7 @@ export interface EditDataType {
   }[];
   // 编辑后台｜展示前台自己需要使用的数据
   other: {
-    [key in string]: string;
+    [key in string]: any;
   };
   select?: EditComponentInfoType['id'];
   copyData?: {
@@ -251,7 +251,7 @@ function EditDataReducer(state: EditDataType, action: ACTIONTYPE) {
               // 添加
               const { all, current } = temp.data.componentInfo.children!;
               if (all) {
-                if (current && !all[current]) {
+                if (!all[current]) {
                   parentLayout = null;
                   return true;
                 }

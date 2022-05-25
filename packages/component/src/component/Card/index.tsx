@@ -29,7 +29,7 @@ export const Card: FC<CardProps> = ({ children,style}) => {
 
 export const CardComponent:ComponentType = {
   name: '布局组件',
-  icon:'https://cdn.jsdelivr.net/gh/HouJinlong/pic@master/2022-04-21/Card.png',
+  icon:'http://img01.mehiya.com/img/png/id/50721837186',
   Component: Card,
   schema: {
     type: 'object',

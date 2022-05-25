@@ -27,7 +27,7 @@ export function Image(props:ImageProps) {
 
 export const ImageComponent:ComponentType = {
   name: '图片组件',
-  icon:'https://cdn.jsdelivr.net/gh/HouJinlong/pic@master/2022-04-21/Image.png',
+  icon:'http://img01.mehiya.com/img/png/id/50721838173',
   Component: Image,
   schema: {
     type: 'object',

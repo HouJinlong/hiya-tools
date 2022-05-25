@@ -20,80 +20,79 @@ const Template: Story<BackEndPropsType> = (args) => {
   });
   const [data, setData] = useState({
     components: {
-      '0176b99d-e07a-4be7-bf6a-676e254b7bbe': {
-        id: '0176b99d-e07a-4be7-bf6a-676e254b7bbe',
-        formData: {
-          style: {
-            display: 'flex',
-            flexWrap: 'wrap',
-            justifyContent: 'flex-start',
-            alignContent: 'flex-start',
-            boxSizing: 'border-box',
-            width: '100%',
-            height: '100%',
+      "d3c4f0e0-0b33-4da6-b762-5b16a7f9c494": {
+          "id": "d3c4f0e0-0b33-4da6-b762-5b16a7f9c494",
+          "formData": {
+              "tabIndex": "1",
+              "TabsStyle": {},
+              "TabsItemStyle": {},
+              "TabsItemActiveStyle": {},
+              "TabsAndStyles": [
+                  {
+                      "text": "测试"
+                  },
+                  {
+                      "text": "测试2"
+                  }
+              ]
           },
-        },
-        key: 'Card',
+          "key": "Tab"
       },
-      'c2337eda-2963-4eea-b8d0-cd2ef32ef660': {
-        id: 'c2337eda-2963-4eea-b8d0-cd2ef32ef660',
-        formData: {
-          width: '100%',
-          height: 'inherit',
-          src: 'http://static.ixiaochuan.cn/hiya-version_test/c57fbd56c2c08328f7bb.png',
-        },
-        key: 'Image',
+      "3700bcfa-72b0-407a-9c06-b662d0dc4864": {
+          "id": "3700bcfa-72b0-407a-9c06-b662d0dc4864",
+          "formData": {
+              "width": "100%",
+              "height": "inherit",
+              "src": "http://static.ixiaochuan.cn/hiya-version_test/c57fbd56c2c08328f7bb.png"
+          },
+          "key": "Image"
       },
-      'fff590b3-1d59-4a29-9dc9-6d345b70f429': {
-        id: 'fff590b3-1d59-4a29-9dc9-6d345b70f429',
-        formData: {
-          width: '100%',
-          height: 'inherit',
-          src: 'http://static.ixiaochuan.cn/hiya-version_test/c57fbd56c2c08328f7bb.png',
-        },
-        key: 'Image',
+      "5bb67596-818b-47cc-bb43-9388f3d87ef1": {
+          "id": "5bb67596-818b-47cc-bb43-9388f3d87ef1",
+          "formData": {
+              "text": "占位文本",
+              "style": {}
+          },
+          "key": "Text"
       },
-      '8440bc6d-05e0-4e99-963d-fc8e71b999cc': {
-        id: '8440bc6d-05e0-4e99-963d-fc8e71b999cc',
-        formData: {
-          width: '100%',
-          height: 'inherit',
-          src: 'http://static.ixiaochuan.cn/hiya-version_test/c57fbd56c2c08328f7bb.png',
-        },
-        key: 'Image',
-      },
-      '228890c4-1a32-44b9-a09f-0e08858f4306': {
-        id: '228890c4-1a32-44b9-a09f-0e08858f4306',
-        formData: {
-          text: '占位文本',
-          style: {},
-        },
-        key: 'Text',
-      },
-    },
+      "cbbe2eb4-937f-4ebf-9ba7-0d555c8c05df": {
+          "id": "cbbe2eb4-937f-4ebf-9ba7-0d555c8c05df",
+          "formData": {
+              "text": "占位文本",
+              "style": {}
+          },
+          "key": "Text"
+      }
+  },
     layout: [
       {
-        key: '0176b99d-e07a-4be7-bf6a-676e254b7bbe',
-        children: [
-          {
-            key: 'c2337eda-2963-4eea-b8d0-cd2ef32ef660',
-            children: [],
-          },
-          {
-            key: 'fff590b3-1d59-4a29-9dc9-6d345b70f429',
-            children: [],
-          },
-          {
-            key: '8440bc6d-05e0-4e99-963d-fc8e71b999cc',
-            children: [],
-          },
-        ],
-      },
-      {
-        key: '228890c4-1a32-44b9-a09f-0e08858f4306',
-        children: [],
-      },
-    ],
+          "key": "d3c4f0e0-0b33-4da6-b762-5b16a7f9c494",
+          "children": [
+              {
+                  "key": "0",
+                  "children": [
+                      {
+                          "key": "3700bcfa-72b0-407a-9c06-b662d0dc4864",
+                          "children": []
+                      },
+                      {
+                          "key": "5bb67596-818b-47cc-bb43-9388f3d87ef1",
+                          "children": []
+                      }
+                  ]
+              },
+              {
+                  "key": "1",
+                  "children": [
+                      {
+                          "key": "cbbe2eb4-937f-4ebf-9ba7-0d555c8c05df",
+                          "children": []
+                      }
+                  ]
+              }
+          ]
+      }
+  ],
   });
   return (
     <div style={{ margin: '-1rem', height: '100vh' }}>

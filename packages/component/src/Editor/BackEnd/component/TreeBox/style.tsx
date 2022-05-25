@@ -1,6 +1,7 @@
 
 import styled from "styled-components"
 export const TreeBox =styled.div`
+    position: relative;
     height: 100%;
     .ant-menu-vertical{
       border: 0;

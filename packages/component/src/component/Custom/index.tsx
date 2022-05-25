@@ -11,11 +11,10 @@ export const Custom = (props: any) => {
 
 export  const  CustomComponent:ComponentType = {
   Component: Custom,
-  icon:'https://cdn.jsdelivr.net/gh/HouJinlong/pic@master/2022-04-21/Custom.png',
+  icon:'http://img01.mehiya.com/img/png/id/50721838516',
   name: '自定义组件',
   formData: {},
   getConfig: (data) => {
-    console.log('data: ', data);
     return {
       schema: {
         type: 'object',

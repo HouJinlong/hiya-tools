@@ -20,7 +20,7 @@ export const Text: FC<TextProps> = ({ text, style }) => {
 export const TextComponent:ComponentType = {
   Component:Text,
   name: '文本组件',
-  icon:'https://cdn.jsdelivr.net/gh/HouJinlong/pic@master/2022-04-21/Text.png',
+  icon:'http://img01.mehiya.com/img/png/id/50721838279',
   schema: {
     type: 'object',
     required: ['text'],

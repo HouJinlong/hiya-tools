@@ -31,6 +31,7 @@ export interface ComponentType extends ComponentBaseType {
   schema?: any;
   uiSchema?: any;
   formData?: any;
+  hide?:boolean
   children?: {
     all?: {
       [key in string]: string;

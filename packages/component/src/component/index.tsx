@@ -1,5 +1,6 @@
 export * from './Card'
 export * from './Image'
 export * from './Tab'
+export * from './Tab/indexV1'
 export * from './Text'
 export * from './Custom'

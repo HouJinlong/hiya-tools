@@ -81,6 +81,10 @@ const EditWarp = () => {
       return ()=>{
         ObserverRef.current.resizeObserver.unobserve(el)
       }
+    }else{
+      setRect(()=>{
+        return null
+      })
     }
   }, [EditDataState.select,EditDataState.layout]);
   return (

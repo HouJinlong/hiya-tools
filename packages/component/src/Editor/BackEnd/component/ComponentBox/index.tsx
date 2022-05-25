@@ -10,7 +10,7 @@ export function ComponentBox() {
   return (
     <Style.ComponentBox>
       {(EditDataState?.ComponentsInfo || []).map((v) => {
-        return (
+        return v.hide!==true&&(
           <Style.ComponentBoxItem
             key={v.key}
             onClick={() => {

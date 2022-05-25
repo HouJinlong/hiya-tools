@@ -190,9 +190,12 @@ export function TreeBox() {
   const [expandedKeys, setExpandedKeys] = useState<TreeKeysType>([]);
   useEffect(() => {
     if(EditDataState.select ){
-      if (treeRef.current) {
-        treeRef.current.scrollTo({ key: EditDataState.select as TreeKeysType[0] });
-      }
+      setTimeout(() => {
+        const selected =  document.querySelector('.rc-tree-node-selected')
+        if(selected){
+          selected.scrollIntoView({behavior: "smooth", block: "center", inline: "center"})
+        }
+      }, 100);
       setExpandedKeys((v) => {
         return Array.from(new Set([
           ...v,
@@ -208,10 +211,11 @@ export function TreeBox() {
       });
     }
   }, [EditDataState.select]);
+  const treeRefBox = React.useRef<HTMLDivElement>(null);
   const [menuStyle, setMenuStyle] = useState<React.CSSProperties>();
 
   return (
-    <Style.TreeBox>
+    <Style.TreeBox ref={treeRefBox}>
       <MenuBox menuStyle={menuStyle} setMenuStyle={setMenuStyle}></MenuBox>
       {treeData.data.length ? (
         <>
@@ -242,10 +246,12 @@ export function TreeBox() {
                 EditDataDispatch({ type: 'select', data: id });
                 // 设置Menu展示
                 const rect = (info.event.target as any).getBoundingClientRect();
+                const box = treeRefBox.current!.getBoundingClientRect()
+                console.log('rect: ', rect);
                 setMenuStyle(() => ({
                   position: 'absolute',
-                  left: `${rect.x + rect.width}px`,
-                  top: `${rect.y + rect.height / 2}px`,
+                  left: `${rect.x -box.x + rect.width}px`,
+                  top: `${rect.y-box.y + rect.height / 2}px`,
                 }));
               }, 0);
             }}
