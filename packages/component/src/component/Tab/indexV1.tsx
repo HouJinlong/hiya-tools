@@ -10,7 +10,7 @@ export interface TabV1Props {
   TabsItemStyle:React.CSSProperties
   TabsItemActiveIsEqually:boolean
   TabsItemActiveStyle?:React.CSSProperties
-  TabsAndStyles?:Array<{text:string,ActiveStyle:React.CSSProperties,_id:string}>
+  TabsAndStyles?:Array<{text:string,style:React.CSSProperties,ActiveStyle:React.CSSProperties,_id:string}>
 }
 export function TabV1(props: TabV1Props) {
   const [tabIndex, setTabIndex] = useState(props.tabIndex);
@@ -43,6 +43,7 @@ export function TabV1(props: TabV1Props) {
                   alignItems:'center',
                   justifyContent:'center',
                   ...props.TabsItemStyle,
+                  ...v.style,
                   ...Object(tabIndex === i ?{
                     ...props.TabsItemActiveStyle,
                     ...v.ActiveStyle
@@ -99,6 +100,10 @@ export const TabV1Component:ComponentType = {
               title: '文案',
               type: 'string',
             },
+            style: {
+              title: '样式',
+              type: 'object',
+            },
             ActiveStyle: {
               title: '选中时样式',
               type: 'object',
@@ -121,6 +126,9 @@ export const TabV1Component:ComponentType = {
     TabsAndStyles: {
       items: {
         ActiveStyle: {
+          'ui:field': 'StyleSetter',
+        },
+        style: {
           'ui:field': 'StyleSetter',
         },
       },
