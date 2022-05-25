@@ -1,5 +1,5 @@
 {
-  "version": "0.1.16",
+  "version": "0.2.0",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -11,8 +11,8 @@
     "node": ">=10"
   },
   "scripts": {
-    "www":"tsdx build -i  ./src/Component/Text/index.tsx   --name XXX --format umd",
-    "help":"tsdx build --help",
+    "www": "tsdx build -i  ./src/Component/Text/index.tsx   --name XXX --format umd",
+    "help": "tsdx build --help",
     "start": "tsdx watch",
     "build": "tsdx build",
     "test": "tsdx test --passWithNoTests",
@@ -88,5 +88,3 @@
     "uuid": "^8.3.2"
   }
 }
-
-
