@@ -155,7 +155,8 @@ export function TreeBox() {
             title: '',
             isLeaf: true,
             style: {},
-            children:[]
+            children:[],
+            selectable:true
           };
           let data = getComponentInfoById({ EditDataState, id: item.key });
           if (data) {
@@ -165,9 +166,9 @@ export function TreeBox() {
             // 虚拟节点
             ret.title = item.key;
             ret.style = {
-              pointerEvents: 'none',
-              opacity: '.3',
+              opacity: '.5',
             };
+            ret.selectable = false
             if (parentLayout) {
               const parentEditComponent = getComponentInfoById({
                 EditDataState,
@@ -179,6 +180,7 @@ export function TreeBox() {
               ret.isLeaf = false;
             }
           }
+         
           ret.children = transformLayout(item.children, transformFn, item);
           return ret;
         }
@@ -213,7 +215,6 @@ export function TreeBox() {
   }, [EditDataState.select]);
   const treeRefBox = React.useRef<HTMLDivElement>(null);
   const [menuStyle, setMenuStyle] = useState<React.CSSProperties>();
-
   return (
     <Style.TreeBox ref={treeRefBox}>
       <MenuBox menuStyle={menuStyle} setMenuStyle={setMenuStyle}></MenuBox>
@@ -247,7 +248,6 @@ export function TreeBox() {
                 // 设置Menu展示
                 const rect = (info.event.target as any).getBoundingClientRect();
                 const box = treeRefBox.current!.getBoundingClientRect()
-                console.log('rect: ', rect);
                 setMenuStyle(() => ({
                   position: 'absolute',
                   left: `${rect.x -box.x + rect.width}px`,
@@ -256,32 +256,34 @@ export function TreeBox() {
               }, 0);
             }}
             draggable
+            
             onExpand={(expandedKeys) => {
               // 拖动时自动展开
               setExpandedKeys(expandedKeys);
             }}
             allowDrop={({ dropNode, dropPosition }) => {
               let key = String(dropNode.key)
-              if (dropNode.isLeaf) {
-                if (dropPosition === 0) {
-                  // 如果当前节点有虚拟节点，禁止直接拖入
-                  const data = getComponentInfoById({
-                    EditDataState,
-                    id:key,
-                  });
-                  if (data?.componentInfo.children?.all) {
-                    return false;
-                  }
-                } else {
-                  // 禁止拖动到虚拟节点同级
-                  if (
-                    key.split(VirtualKeySeparator).length > 1
-                  ) {
-                    return false;
-                  }
+              const isVirtual =  key.split(VirtualKeySeparator).length > 1
+              if(isVirtual&&dropPosition !== 0){
+                 // 禁止拖动到虚拟节点同级
+                 return false
+              }
+              if (dropPosition === 0) {
+               // 如果当前节点有虚拟节点，禁止直接拖入
+                const data = getComponentInfoById({
+                  EditDataState,
+                  id:key,
+                });
+                if (data?.componentInfo.children?.all) {
+                  return false;
                 }
               }
               return true;
+            }}
+            onDragStart={(info)=>{
+              if(String(info.node.key).split(VirtualKeySeparator).length > 1){
+                info.event.preventDefault()
+              }
             }}
             onDrop={(info) => {
               let dropPosition = info.dropPosition;
