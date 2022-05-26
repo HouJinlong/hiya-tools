@@ -93,12 +93,14 @@ function MenuBox({ menuStyle, setMenuStyle }: MenuBoxProps) {
                       ) as typeof layout;
                       let copyComponents = {} as typeof components;
                       deepLayout([copyLayout], ({ item }) => {
-                        const id = uuid();
-                        copyComponents[id] = {
-                          ...JSON.parse(JSON.stringify(components[item.key])),
-                          id,
-                        };
-                        item.key = id;
+                        if(components[item.key]){
+                          const id = uuid();
+                          copyComponents[id] = {
+                            ...JSON.parse(JSON.stringify(components[item.key])),
+                            id,
+                          };
+                          item.key = id;
+                        }
                       });
                       EditDataDispatch({
                         type: 'add',
