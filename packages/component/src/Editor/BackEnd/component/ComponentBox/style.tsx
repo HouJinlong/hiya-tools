@@ -21,6 +21,7 @@ export const ComponentBoxItem =styled.div`
   line-height: 14px;
 `
 export const ComponentBoxImg = styled.img`
-  height: 40px;
+  max-height: 40px;
+  max-width: 100%;
   display: block;
 `
