@@ -6,7 +6,7 @@ export const Custom = (props: any) => {
   const CustomComponent = useMemo(() => {
     return (other.CustomComponents || [])[props.CustomComponentKey]?.Component;
   }, [props.CustomComponentKey]);
-  return <div>{CustomComponent && <CustomComponent />}</div>;
+  return CustomComponent? <CustomComponent />:null;
 };
 
 export  const  CustomComponent:ComponentType = {
