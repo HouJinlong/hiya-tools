@@ -64,9 +64,7 @@ export const LanguageContainerHoc = (data:Omit<LanguageContainerProps,'children'
 export interface GetResourcesArgument<O, T extends XcNamespace,N,K extends keyof N>{
   typeLang:O
   defaultNS: T
-  langs:{
-      [key in K]:O
-  }
+  langs:any
 }
 export type GetResourcesReturn<O, T extends XcNamespace, N, K extends keyof N> = {
   [key in K]: {

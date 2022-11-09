@@ -119,7 +119,10 @@ export function createLangFile(data, lang) {
       let value =v[langXlsxKey] 
       if (value) {
         value = String(value);
-        fileData[v[config.key]] = config.placeholder === value ? "" : value;
+        if(config.placeholder === value){
+          return 
+        }
+        fileData[v[config.key]] =  value;
       } else {
         err.push(v[config.key]);
       }
