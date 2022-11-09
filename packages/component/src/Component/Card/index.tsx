@@ -7,8 +7,10 @@ export interface CardProps{
 export const CardDefaultStyle:CardProps['style'] = {
   // 固定样式
   display:'flex',
-  flexWrap:'wrap',
+  flexWrap:'nowrap',
+  flexDirection:'column',
   justifyContent:'flex-start',
+  'alignItems':'flex-start',
   alignContent: 'flex-start',
   boxSizing:'border-box',
   //可调整样式 

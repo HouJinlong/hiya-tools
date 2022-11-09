@@ -80,6 +80,7 @@
     "@stitches/react": "^1.2.6",
     "antd": "^4.18.3",
     "dayjs": "^1.10.7",
+    "file-saver": "^2.0.5",
     "moment": "^2.29.1",
     "rc-tree": "^5.5.0",
     "react-awesome-qr": "^1.1.0",

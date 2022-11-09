@@ -4,7 +4,7 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import { Empty, Tooltip, Menu, Modal } from 'antd';
+import { Empty, Tooltip, Menu, Modal,message } from 'antd';
 import { v4 as uuid } from 'uuid';
 import Tree, { TreeNodeProps } from 'rc-tree';
 import 'rc-tree/assets/index.css';
@@ -16,6 +16,7 @@ import {
   EditDataType,
 } from '../../../useEditData';
 import { BackEndEditorContext } from '../../../EditorContext';
+import { saveAs } from "file-saver";
 import { ComponentBox } from '../ComponentBox';
 const VirtualKeySeparator = '-VirtualKeySeparator-';
 
@@ -113,6 +114,80 @@ function MenuBox({ menuStyle, setMenuStyle }: MenuBoxProps) {
                     },
                   },
                   {
+                    text: '导出',
+                    onClick: () => {
+                      let copyData: EditDataType['copyData'];
+                      deepLayout(EditDataState.layout, ({ item }) => {
+                        if (item.key === EditDataState.select) {
+                          let copyLayout: EditDataType['layout'][0] =
+                            JSON.parse(JSON.stringify(item));
+                          let copyComponents: EditDataType['components'] = {};
+                          deepLayout([copyLayout], ({ item }) => {
+                            const components =
+                              EditDataState.components[item.key];
+                            if (components) {
+                              copyComponents[item.key] = JSON.parse(
+                                JSON.stringify(components)
+                              );
+                            }
+                          });
+                          copyData = {
+                            layout: copyLayout,
+                            components: copyComponents,
+                          };
+                          return true;
+                        }
+                      });
+                      saveAs(new Blob([JSON.stringify(copyData, null, 2)], {
+                          type: 'application/json'
+                      }),'导出组件.json')
+                      setMenuStyle(undefined);
+                    },
+                  },
+                  {
+                    text: <div>导入</div>,
+                    onClick: () => {
+                      let file:HTMLInputElement = document.createElement('input')
+                      file.type ="file"
+                      file.accept = "application/json"
+                      file.click()
+                      file.onchange =function (){
+                        const fileReader = new FileReader()
+                        fileReader.readAsText((file.files||[])[0])
+                        fileReader.onload =function (e: any){
+                          try {
+                            const { layout, components }  = JSON.parse(e.target.result)
+                            let copyLayout = JSON.parse(
+                              JSON.stringify(layout)
+                            ) as typeof layout;
+                            let copyComponents = {} as typeof components;
+                            deepLayout([copyLayout], ({ item }) => {
+                              if(components[item.key]){
+                                const id = uuid();
+                                copyComponents[id] = {
+                                  ...JSON.parse(JSON.stringify(components[item.key])),
+                                  id,
+                                };
+                                item.key = id;
+                              }
+                            });
+                            EditDataDispatch({
+                              type: 'add',
+                              data: {
+                                components: copyComponents,
+                                layout: copyLayout,
+                              },
+                            });
+                          } catch (error) {
+                            console.log('error: ', error);
+                            message.error('导入文件格式有问题')
+                          }
+                          setMenuStyle(undefined);
+                        }
+                      }
+                    },
+                  },
+                  {
                     text: '删除',
                     onClick: () => {
                       EditDataDispatch({
@@ -122,12 +197,15 @@ function MenuBox({ menuStyle, setMenuStyle }: MenuBoxProps) {
                       setMenuStyle(undefined);
                     },
                   },
-                ].map((v) => {
+                ].map((v,i) => {
                   return (
                     <Menu.Item
-                      key={v.text}
+                      key={`${i+1}`}
                       disabled={v.disabled}
                       onClick={v.onClick}
+                      style={{
+                        'position':'relative'
+                      }}
                     >
                       {v.text}
                     </Menu.Item>
