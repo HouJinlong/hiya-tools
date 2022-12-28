@@ -21,50 +21,56 @@ class ShimsAst {
     };
   }
   addNamespace(name,src){
-      const data = this.getSourceCode()
-      traverse(data.ast, {
-        ObjectExpression: function (path) {
-            if(path.parent.id.name==="data"){
-                const allNamespace = path.node.properties.map((v) => {
-                    return v.key.name;
-                });
-                path.replaceWith(
-                    t.objectExpression([...allNamespace,name].map(v=>{
-                        return t.objectProperty(
-                          t.identifier(v),
-                          t.memberExpression(
-                            t.identifier(v),
-                            t.identifier("typeLang")
-                          )
-                        )
-                    }))
-                )
-                path.skip()
+      try {
+          const data = this.getSourceCode()
+          traverse(data.ast, {
+            ObjectExpression: function (path) {
+                if(path.parent.id.name==="data"){
+                    const allNamespace = path.node.properties.map((v) => {
+                        return v.key.name;
+                    });
+                    path.replaceWith(
+                        t.objectExpression([...allNamespace,name].map(v=>{
+                            return t.objectProperty(
+                              t.identifier(v),
+                              t.memberExpression(
+                                t.identifier(v),
+                                t.identifier("typeLang")
+                              )
+                            )
+                        }))
+                    )
+                    path.skip()
+                }
+            },
+            VariableDeclaration:function(path){
+                if(path.node.declarations[0].id.name="data"){
+                    path.insertBefore(
+                        t.importDeclaration([t.importDefaultSpecifier(t.identifier(name))], t.stringLiteral(src))
+                    )
+                }
             }
-        },
-        VariableDeclaration:function(path){
-            if(path.node.declarations[0].id.name="data"){
-                path.insertBefore(
-                    t.importDeclaration([t.importDefaultSpecifier(t.identifier(name))], t.stringLiteral(src))
-                )
-            }
-        }
-     });
-    fs.writeFileSync(this.filePath,transformFromAstSync(data.ast,data.code).code)
+        });
+        fs.writeFileSync(this.filePath,transformFromAstSync(data.ast,data.code).code)
+      } catch (error) {
+      }
   }
   getAllNamespace():string[]{
       let allNamespace=[];
-      const data = this.getSourceCode()
-      traverse(data.ast, {
-        ObjectExpression: function (path) {
-            if(path.parent.id.name==="data"){
-                allNamespace = path.node.properties.map((v) => {
-                    return v.key.name;
-                });
-                path.skip()
-            }
-        }
-     });
+      try {
+        const data = this.getSourceCode()
+        traverse(data.ast, {
+          ObjectExpression: function (path) {
+              if(path.parent.id.name==="data"){
+                  allNamespace = path.node.properties.map((v) => {
+                      return v.key.name;
+                  });
+                  path.skip()
+              }
+          }
+       });
+      } catch (error) {
+      }
      return allNamespace
   }
 }
