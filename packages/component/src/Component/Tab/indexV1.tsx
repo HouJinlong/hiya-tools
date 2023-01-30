@@ -68,6 +68,7 @@ export function TabV1(props: TabV1Props) {
 
 export const TabV1Component:ComponentType = {
   Component:TabV1,
+  hide:true,
   name: '选项卡',
   icon:'http://img01.mehiya.com/img/png/id/50721838421',
   schema: {
