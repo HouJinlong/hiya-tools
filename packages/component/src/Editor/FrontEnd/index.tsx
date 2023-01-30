@@ -41,8 +41,9 @@ const EditWarp = () => {
   // 点击选中
   useEffect(() => {
     const fn = (e: any) => {
-      for (let index = 0; index < e.path.length; index++) {
-        const id = e.path[index]?.previousElementSibling?.id?.replace(
+      const path =  e.path|| (e.composedPath && e.composedPath())
+      for (let index = 0; index < path.length; index++) {
+        const id = path[index]?.previousElementSibling?.id?.replace(
           prefix,
           ''
         );
