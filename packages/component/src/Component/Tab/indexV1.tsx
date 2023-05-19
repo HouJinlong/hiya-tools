@@ -13,7 +13,6 @@ export interface TabV1Props {
   TabsAndStyles?:Array<{text:string,style:React.CSSProperties,ActiveStyle:React.CSSProperties,_id:string}>
 }
 export function TabV1(props: TabV1Props) {
-  console.log(props.children);
   const [tabIndex, setTabIndex] = useState(props.tabIndex);
   useEffect(() => {
     setTabIndex(props.tabIndex);
