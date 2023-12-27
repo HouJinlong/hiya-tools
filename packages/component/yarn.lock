@@ -3322,10 +3322,10 @@
     "@webassemblyjs/wast-parser" "1.9.0"
     "@xtuc/long" "4.2.2"
 
-"@xc/hiya-host@^0.0.5":
-  version "0.0.5"
-  resolved "http://npm.ixiaochuan.cn/@xc%2fhiya-host/-/hiya-host-0.0.5.tgz#6ef6cb8808ffeff3de31470871f3ccd800813db8"
-  integrity sha512-VkiwbuGEpl6m8Sbp0DZQnsZj4sJbPiF2zBASLmHsVQJtXpc+/U241uww4DhPKvl9sv8W/jWuPsYE7QZP9uD6Tw==
+"@xc/hiya-host@^0.0.6":
+  version "0.0.6"
+  resolved "http://npm.ixiaochuan.cn/@xc%2fhiya-host/-/hiya-host-0.0.6.tgz#9525c1e67da5dd2dcba1613b9e2ab0e1377e68ac"
+  integrity sha512-wHsf10wtp+Ay9zZuKixV0U86oWr5bXJi03xMeFrHHfOBe2gL0XsIoiGdyi5UKKufFmWouW016PAQm8VASpL5rw==
   dependencies:
     url-parse "^1.5.10"
 
