@@ -1,5 +1,6 @@
 import React, { useEffect, useState,ReactChild} from 'react';
 import { ComponentType } from '../../Editor/EditorContext';
+import {  replaceAutoHostStyle} from '../../host';
 export interface TabProps {
   tabIndex: string;
   children:{
@@ -24,7 +25,9 @@ export function Tab(props: TabProps) {
         display:'flex',
         alignItems:'center',
         transform: 'translate3d(0, 0, 0)',
-        ...props.TabsStyle,
+        ...replaceAutoHostStyle(
+          props.TabsStyle
+        ),
       }}>
         {
           (props.TabsAndStyles||[]).map((v, _i) => {
@@ -36,7 +39,7 @@ export function Tab(props: TabProps) {
                 onClick={() => {
                   setTabIndex(i)
                 }}
-                style={{
+                style={replaceAutoHostStyle({
                   flexShrink: 0,
                   boxSizing:'border-box',
                   display:'flex',
@@ -48,7 +51,7 @@ export function Tab(props: TabProps) {
                     ...v.ActiveStyle
                   }:{
                   })
-                }}
+                })}
               >
                 {v.text}
               </div>

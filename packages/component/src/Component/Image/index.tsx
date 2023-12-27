@@ -1,5 +1,6 @@
 import React from 'react'
 import { ComponentType } from '../../Editor/EditorContext';
+import { replaceAutoHost } from '../../host';
 export interface ImageProps{
   width:string,
   height:string,
@@ -15,7 +16,7 @@ export function Image(props:ImageProps) {
   return (
     <img
       className='ToyBricks-Image'
-      src={props.src}
+      src={replaceAutoHost(props.src)}
       style={{
         ...style,
         display: 'block'

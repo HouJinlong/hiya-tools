@@ -1,5 +1,6 @@
 import React, { FC,  ReactChild } from 'react';
 import { ComponentType } from '../../Editor/EditorContext';
+import { replaceAutoHostStyle } from '../../host';
 export interface CardProps{
   children?: ReactChild;
   style: React.CSSProperties
@@ -21,7 +22,7 @@ export const CardDefaultStyle:CardProps['style'] = {
 export const Card: FC<CardProps> = ({ children,style}) => {
   return <div className='ToyBricks-Card' style={{
     ...CardDefaultStyle,
-    ...style,
+    ...replaceAutoHostStyle(style),
   }}>
       {children}
     </div>;

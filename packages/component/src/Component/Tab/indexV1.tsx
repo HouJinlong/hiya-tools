@@ -1,5 +1,6 @@
 import React, { useEffect, useState,ReactChild} from 'react';
 import { ComponentType } from '../../Editor/EditorContext';
+import {  replaceAutoHostStyle} from '../../host';
 // 新版的tab组件 在原版本的基础为 TabsAndStyles增加了唯一id
 export interface TabV1Props {
   tabIndex: string;
@@ -20,12 +21,12 @@ export function TabV1(props: TabV1Props) {
   
   return (
     <>
-      <div className='ToyBricks-Tab' style={{
+      <div className='ToyBricks-Tab' style={replaceAutoHostStyle({
         display:'flex',
         alignItems:'center',
         transform: 'translate3d(0, 0, 0)',
         ...props.TabsStyle,
-      }}>
+      })}>
         {
           (props.TabsAndStyles||[]).map((v, _i) => {
             const i = String(_i)
@@ -36,7 +37,7 @@ export function TabV1(props: TabV1Props) {
                 onClick={() => {
                   setTabIndex(i)
                 }}
-                style={{
+                style={replaceAutoHostStyle({
                   flexShrink: 0,
                   boxSizing:'border-box',
                   display:'flex',
@@ -49,7 +50,7 @@ export function TabV1(props: TabV1Props) {
                     ...v.ActiveStyle
                   }:{
                   })
-                }}
+                })}
               >
                 {v.text}
               </div>

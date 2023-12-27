@@ -1,5 +1,5 @@
 {
-  "version": "0.2.9",
+  "version": "0.2.12",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -24,6 +24,7 @@
     "build-storybook": "build-storybook"
   },
   "peerDependencies": {
+    "@xc/hiya-host": "^0.0.5",
     "react": ">=16"
   },
   "husky": {

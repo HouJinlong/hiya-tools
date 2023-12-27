@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 import { ComponentType } from '../../Editor/EditorContext';
+import { replaceAutoHostStyle } from '../../host';
 export interface TextProps {
   text: string;
   style: React.CSSProperties;
@@ -10,7 +11,7 @@ export const Text: FC<TextProps> = ({ text, style }) => {
       className="ToyBricks-Text"
       style={{
         display: 'flex',
-        ...style,
+        ...replaceAutoHostStyle(style),
       }}
     >
       {text}
