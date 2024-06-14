@@ -1,6 +1,6 @@
 import React from 'react'
 import { ComponentType } from '../../Editor/EditorContext';
-import { replaceAutoHost } from '../../host';
+import { useRenderViewContext } from '../../Editor/RenderView';
 export interface ImageProps{
   width:string,
   height:string,
@@ -12,6 +12,7 @@ export const ImageDefaultProps={
   src: 'http://static.ixiaochuan.cn/hiya-version_test/c57fbd56c2c08328f7bb.png'
 }
 export function Image(props:ImageProps) {
+  const {AutoHost:{replaceAutoHost}} = useRenderViewContext()
   const {src,...style} = props
   return (
     <img

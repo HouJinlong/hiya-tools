@@ -1,6 +1,6 @@
 import React, { useEffect, useState,ReactChild} from 'react';
 import { ComponentType } from '../../Editor/EditorContext';
-import {  replaceAutoHostStyle} from '../../host';
+import { useRenderViewContext } from '../../Editor/RenderView';
 // 新版的tab组件 在原版本的基础为 TabsAndStyles增加了唯一id
 export interface TabV1Props {
   tabIndex: string;
@@ -14,6 +14,7 @@ export interface TabV1Props {
   TabsAndStyles?:Array<{text:string,style:React.CSSProperties,ActiveStyle:React.CSSProperties,_id:string}>
 }
 export function TabV1(props: TabV1Props) {
+  const {AutoHost:{replaceAutoHostStyle}} = useRenderViewContext()
   const [tabIndex, setTabIndex] = useState(props.tabIndex);
   useEffect(() => {
     setTabIndex(props.tabIndex);

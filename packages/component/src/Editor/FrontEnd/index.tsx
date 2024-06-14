@@ -5,6 +5,7 @@ import React, {
   useState,
   useRef,
 } from 'react';
+import type { getHost } from '@xc/hiya-host';
 import { RenderView,prefix } from '../RenderView/index';
 import * as Style from './style';
 
@@ -106,6 +107,7 @@ export interface FrontEndPropsType {
   EditDataStateOther: {
     [key in string]: any;
   };
+  AutoHost: ReturnType<typeof getHost>;
   other:{
     [key in string]: any;
   };
@@ -121,6 +123,7 @@ export function FrontEnd(props: FrontEndPropsType) {
           edit={true}
           Warp={props.Warp}
           other={props.other}
+          AutoHost={props.AutoHost}
           EditDataState={{
             components: data.EditDataState.components,
             layout: data.EditDataState.layout,

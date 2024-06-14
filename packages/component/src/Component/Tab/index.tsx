@@ -1,6 +1,6 @@
 import React, { useEffect, useState,ReactChild} from 'react';
 import { ComponentType } from '../../Editor/EditorContext';
-import {  replaceAutoHostStyle} from '../../host';
+import { useRenderViewContext } from '../../Editor/RenderView';
 export interface TabProps {
   tabIndex: string;
   children:{
@@ -13,7 +13,7 @@ export interface TabProps {
   TabsAndStyles?:Array<{text:string,ActiveStyle:React.CSSProperties}>
 }
 export function Tab(props: TabProps) {
- 
+ const {AutoHost:{replaceAutoHostStyle}} =useRenderViewContext()
   const [tabIndex, setTabIndex] = useState(props.tabIndex);
   useEffect(() => {
     setTabIndex(props.tabIndex);

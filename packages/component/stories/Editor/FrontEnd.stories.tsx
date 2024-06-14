@@ -3,6 +3,7 @@ import { Meta, Story } from '@storybook/react';
 import { FrontEnd } from '../../src/Editor/FrontEnd/index';
 import * as Component from '../../src/Component';
 import { RenderViewContext } from '../../src/Editor/RenderView';
+import { getHost,HiyaHostMaps } from '@xc/hiya-host';
 const meta: Meta = {
   title: 'Editor/FrontEnd',
   component: FrontEnd,
@@ -11,6 +12,16 @@ const meta: Meta = {
     // controls: { expanded: true },
   },
 };
+export const AutoHost = getHost({
+  HostMaps:HiyaHostMaps,
+  host:HiyaHostMaps.prod[1].activity,
+  'env':'prod'
+})
+export const  {replaceAutoHost,auto}= AutoHost
+
+console.log('AutoHost: ', AutoHost);
+console.log('replaceAutoHost: ', replaceAutoHost);
+
 
 export default meta;
 
@@ -31,6 +42,7 @@ const Template: Story<any> = (args) => (
         TabV1: Component.TabV1Component,
         CustomComponent: Component.CustomComponent,
       }}
+      AutoHost={AutoHost}
       Warp={Warp}
       EditDataStateOther={{
         CustomComponents:[
