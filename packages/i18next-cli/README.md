@@ -160,3 +160,8 @@ xci18n update ./i18n/index.ts -x ./主播任务翻译key文档.xlsx
 ```
 ![https://cdn.jsdelivr.net/gh/HouJinlong/pic@master/2022-01-07/20220107162142.png](https://cdn.jsdelivr.net/gh/HouJinlong/pic@master/2022-01-07/20220107162142.png)
 ![https://cdn.jsdelivr.net/gh/HouJinlong/pic@master/2022-05-18/20220518105211.png](https://cdn.jsdelivr.net/gh/HouJinlong/pic@master/2022-05-18/20220518105211.png)
+
+
+## 待看
+
+- [将 Google Sheets 用作数据库](https://thenewstack.io/how-to-use-google-sheets-as-a-database-with-react-and-ssr/)
